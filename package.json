@@ -1,5 +1,30 @@
 {
   "dependencies": {
     "prettier": "^2.7.1"
-  }
+  },
+  "name": "routinejs",
+  "version": "1.0.0",
+  "description": "A dead simple nodejs routine, that's it!",
+  "main": "routine.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zulfiqar-Qureshi/routine-js.git"
+  },
+  "keywords": [
+    "node-router",
+    "router",
+    "paths",
+    "routes",
+    "javascript-router"
+  ],
+  "author": "Zulfiqar Qureshi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zulfiqar-Qureshi/routine-js/issues"
+  },
+  "homepage": "https://github.com/Zulfiqar-Qureshi/routine-js#readme"
 }

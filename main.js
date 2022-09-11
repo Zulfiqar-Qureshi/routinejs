@@ -1,11 +1,16 @@
 const Router = require('./router')
+const Trie = require('./trie')
+
+const trie = new Trie()
+
+trie.add('foo', 'bar')
 
 const app = new Router()
 
 app.get('/hello', (req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' }).end(
         JSON.stringify({
-            message: 'worked',
+            message: trie.get('foo'),
         })
     )
 })
@@ -23,6 +28,10 @@ app.get('/new', (req, res) => {
     res.json({
         message: 'worked again on json method :D',
     })
+})
+
+app.post('/new', (req, res) => {
+    res.status(404).json(req.body)
 })
 
 app.get(`/`, (req, res) => {
