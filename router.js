@@ -6,8 +6,8 @@ class Router {
     routes = []
 
     //Method to push route data into the routes array,
-    //since the behaviour is only different incase of methodString
-    //i.e GET, POST etc, we abstracted this push behaviour into a
+    //since the behaviour is only different in case of methodString
+    //i.e. GET, POST etc. we abstracted this push behaviour into a
     //separate method, hence called routePush
     routePush(methodString, url, ...handlers) {
         this.routes.push({
@@ -79,6 +79,16 @@ class Router {
                 //Since these below methods allow a payload inside request body,
                 // we need to parse it and attach it to the req.body object
                 if (['PUT', 'PATCH', 'POST'].indexOf(req.method) !== -1) {
+                    if (
+                        req.headers['content-type'].split(';')[0] ===
+                        'multipart/form-data'
+                    ) {
+                        res.status(500).json({
+                            message:
+                                'Multipart data is not currently supported within routine',
+                        })
+                    }
+
                     const decoder = new StringDecoder('utf-8')
                     let buffer = ''
 
@@ -100,6 +110,13 @@ class Router {
                         //Here we are running the main last handler of
                         //the matched route
                         route.handler(req, res)
+                    })
+
+                    req.on('error', (err) => {
+                        console.error(
+                            'An error is encountered while parsing body'
+                        )
+                        console.error(err)
                     })
                     //This else block means if request is of type GET where body
                     //should not be present or should not be parsed
@@ -136,7 +153,6 @@ class Router {
                             }
                             resolve('middleware done')
                         }
-
                         mid(req, res, next)
                     }
 
@@ -146,7 +162,7 @@ class Router {
                 }
             } else {
                 res.json(404, {
-                    message: 'Not found',
+                    message: 'Route not found',
                 })
             }
         }).listen(PORT)

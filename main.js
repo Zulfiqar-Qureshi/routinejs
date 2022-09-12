@@ -4,7 +4,7 @@ const app = new Router()
 function mid(req, res, next) {
     let bool = {
         message: 'data from mid middleware function',
-        isPresent: true,
+        isPresent: false,
     }
     next(bool)
 }
@@ -23,13 +23,14 @@ app.get('/new', (req, res) => {
     })
 })
 
-app.post('/new', (req, res) => {
-    res.status(404).json(req.body)
+app.patch('/new', (req, res) => {
+    res.status(200).json(req.body)
 })
 
 app.get(`/`, mid, mid2, (req, res) => {
     res.json({
         message: 'index on json method',
+        nextData: req.nextData,
     })
 })
 
