@@ -5,22 +5,33 @@ const StringDecoder = require('string_decoder').StringDecoder
 class Router {
     routes = []
 
-    get(url, ...handlers) {
+    //Method to push route data into the routes array,
+    //since the behaviour is only different incase of methodString
+    //i.e GET, POST etc, we abstracted this push behaviour into a
+    //separate method, hence called routePush
+    routePush(methodString, url, ...handlers) {
         this.routes.push({
             url,
-            method: 'GET',
+            method: methodString,
             handler: handlers.pop(),
             middlewares: handlers,
         })
     }
 
+    get(url, ...handlers) {
+        this.routePush('GET', url, ...handlers)
+    }
     post(url, ...handlers) {
-        this.routes.push({
-            url,
-            method: 'POST',
-            handler: handlers.pop(),
-            middlewares: handlers,
-        })
+        this.routePush('POST', url, ...handlers)
+    }
+    put(url, ...handlers) {
+        this.routePush('PUT', url, ...handlers)
+    }
+    patch(url, ...handlers) {
+        this.routePush('PATCH', url, ...handlers)
+    }
+    delete(url, ...handlers) {
+        this.routePush('DELETE', url, ...handlers)
     }
 
     /*
@@ -28,11 +39,12 @@ class Router {
      * @param handler {function} callback function to call once server is successfully started
      */
     Listen(PORT = 8080, handler = null) {
-        http.createServer((req, res) => {
+        http.createServer(async (req, res) => {
             //Custom method allowing easy json transmission as ExpressJS does
             res.json = (json) => {
                 res.setHeader('Content-Type', 'application/json')
                 res.end(JSON.stringify(json))
+                return 0
             }
             res.status = (statusCode = 200) => {
                 res.statusCode = statusCode
@@ -92,8 +104,41 @@ class Router {
                     //This else block means if request is of type GET where body
                     //should not be present or should not be parsed
                 } else {
-                    //This for loop is running middleware functions
-                    for (let mid of route.middlewares) mid(req, res)
+                    /*
+                     * Lots of things are happening here, so let's break them down one by one
+                     * Firstly, we are utilizing a promise so that it waits until the inner loop is completed
+                     * Secondly, another promise inside the loop to wait for each function execution to
+                     *  - complete before moving to next iteration
+                     * Lastly, we have two functions
+                     *   - midWrapper and inside it is a next() middleware caller function
+                     *   - midWrapper and next both work on the resolve function of the two
+                     *   - promises, cleverly, we get a middleware execution pattern
+                     * */
+                    await new Promise(async (resolve, reject) => {
+                        for (let mid of route.middlewares) {
+                            await new Promise((resolveInner, rejectInner) => {
+                                midWrapper(
+                                    mid,
+                                    req,
+                                    res,
+                                    resolveInner,
+                                    rejectInner
+                                )
+                            })
+                        }
+                        resolve('done')
+                    })
+
+                    function midWrapper(mid, req, res, resolve, reject) {
+                        function next(optionalData = null) {
+                            if (optionalData != null) {
+                                req.nextData = optionalData
+                            }
+                            resolve('middleware done')
+                        }
+
+                        mid(req, res, next)
+                    }
 
                     //Here we are running the main last handler of
                     //the matched route
