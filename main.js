@@ -1,5 +1,5 @@
-const Router = require('./lib/router')
-const app = new Router()
+const Routine = require('./lib/router')
+const app = new Routine()
 
 function mid(req, res, next) {
     let obj = {
@@ -23,6 +23,8 @@ function mid2(req, res, next, cancel) {
         })
     }
 }
+
+app.use((req, res) => console.log('middleware supported'))
 
 app.get('/new', (req, res) => {
     res.json({
