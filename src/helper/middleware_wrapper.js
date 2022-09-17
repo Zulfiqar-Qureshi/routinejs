@@ -4,7 +4,7 @@ module.exports = function middlewareWrapper(
     res,
     resolve,
     reject,
-    rejectOuter
+    rejectOuter,
 ) {
     function next(optionalData = null) {
         if (optionalData != null) {
@@ -14,6 +14,7 @@ module.exports = function middlewareWrapper(
     }
 
     function cancel(handler, optionalMessage = 'Request Cancelled') {
+        req.rejectedByCancel = true
         rejectOuter(optionalMessage)
         handler(req)
         res.end()

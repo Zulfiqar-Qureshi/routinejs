@@ -12,9 +12,10 @@ class Routine {
         allowMultipart: false,
         catchUnhandledErrors: true,
         asyncErrorHandler: function (error, ...restargs) {
-            restargs[restargs.length - 1].json({
-                error: error.stack,
-            })
+            console.error(
+                clc.red.underline(`ERROR -->`),
+                clc.yellow(error),
+            )
         },
     }
 
@@ -89,7 +90,7 @@ class Routine {
      * @param PORT {number} Port to start listening on, default is 8080
      * @param handler {function} callback function to call once server is successfully started
      */
-    Listen(PORT = 8080, handler = null) {
+    listen(PORT = 8080, handler = null) {
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
@@ -143,7 +144,7 @@ class Routine {
                 if (['PUT', 'PATCH', 'POST'].indexOf(req.method) !== -1) {
                     if (
                         req.headers['content-type'].split(';')[0] ===
-                            'multipart/form-data' &&
+                        'multipart/form-data' &&
                         !this.conf.allowMultipart
                     ) {
                         res.status(500).json({
@@ -185,7 +186,9 @@ class Routine {
         }
 
         process.on('uncaughtException', function (err) {
-            conf.asyncErrorHandler(err, requestRef, responseRef)
+            if (!requestRef?.rejectedByCancel) {
+                conf.asyncErrorHandler(err, requestRef, responseRef)
+            }
         })
 
         return server
