@@ -1,12 +1,17 @@
 {
   "dependencies": {
+    "@phil-r/stats": "^1.4.4",
+    "body-parser": "^1.20.0",
+    "chalk": "^5.0.1",
+    "cli-color": "^2.0.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "prettier": "^2.7.1"
   },
   "name": "routinejs",
   "version": "1.0.0",
   "description": "A dead simple nodejs routine, that's it!",
-  "main": "routine.js",
-  "devDependencies": {},
+  "main": "lib/router.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
