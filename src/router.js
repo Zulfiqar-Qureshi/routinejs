@@ -4,6 +4,8 @@ const executeRouteHandlers = require('./helper/route_handler')
 const executeMiddlewareHandler = require('./helper/middleware_handler')
 const bodyParser = require('./helper/body_parser')
 const clc = require('cli-color')
+const {EventEmitter} = require('node:events')
+const emitter = new EventEmitter();
 
 class Routine {
     routes = []
@@ -11,6 +13,7 @@ class Routine {
     conf = {
         allowMultipart: false,
         catchUnhandledErrors: true,
+        enableBodyParsing: true,
         asyncErrorHandler: function (error, ...restargs) {
             console.error(
                 clc.red.underline(`ERROR -->`),
@@ -20,7 +23,15 @@ class Routine {
     }
 
     constructor(conf) {
-        this.conf.allowMultipart = conf?.allowMultipart
+        if (conf.allowMultipart != undefined && typeof conf.allowMultipart === 'boolean') {
+            this.conf.allowMultipart = conf?.allowMultipart
+        }
+        if (conf.enableBodyParsing != undefined && typeof conf.enableBodyParsing === 'boolean') {
+            this.conf.enableBodyParsing = conf?.enableBodyParsing
+        }
+        if (conf.catchUnhandledErrors != undefined && typeof conf.catchUnhandledErrors === 'boolean') {
+            this.conf.catchUnhandledErrors = conf?.catchUnhandledErrors
+        }
         if (
             conf.asyncErrorHandler &&
             typeof conf.asyncErrorHandler === 'function'
@@ -116,7 +127,7 @@ class Routine {
                 res,
                 this.middlewares,
                 parsedUrl,
-                this.conf.asyncErrorHandler
+                emitter
             )
             //attaching incoming query strings to request.query object
             req.query = parsedUrl.query
@@ -153,7 +164,9 @@ class Routine {
                         return
                     }
 
-                    req.body = await bodyParser(req)
+                    if (conf.enableBodyParsing) {
+                        req.body = await bodyParser(req)
+                    }
 
                     await executeRouteHandlers(
                         route,
@@ -185,12 +198,17 @@ class Routine {
             handler()
         }
 
-        process.on('uncaughtException', function (err) {
-            if (!requestRef?.rejectedByCancel) {
+        if (conf.catchUnhandledErrors) {
+            process.on('uncaughtException', function (err) {
                 conf.asyncErrorHandler(err, requestRef, responseRef)
-            }
+            })
+        }
+        emitter.on('request-cancelled', (e) => {
+            console.log('emitter')
+            process.on('uncaughtException', (error) => {
+                console.log('process')
+            })
         })
-
         return server
     }
 }
