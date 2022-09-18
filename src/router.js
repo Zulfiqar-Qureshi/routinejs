@@ -7,6 +7,46 @@ const clc = require('cli-color')
 const {EventEmitter} = require('node:events')
 const emitter = new EventEmitter();
 
+function Router() {
+    let routes = []
+    //Method to push route data into the routes array,
+    //since the behaviour is only different in case of methodString
+    //i.e. GET, POST etc. we abstracted this push behaviour into a
+    //separate method, hence called routePush
+    function routePush(methodString, url, ...handlers) {
+        routes.push({
+            url,
+            method: methodString,
+            handler: handlers.pop(),
+            middlewares: handlers,
+        })
+    }
+
+    return {
+        get: (url, ...handlers) => {
+            routePush('GET', url, ...handlers)
+        },
+
+        post: (url, ...handlers) => {
+            routePush('POST', url, ...handlers)
+        },
+
+        put: (url, ...handlers) => {
+            routePush('PUT', url, ...handlers)
+        },
+
+        patch: (url, ...handlers) => {
+            routePush('PATCH', url, ...handlers)
+        },
+
+        delete: (url, ...handlers) => {
+            routePush('DELETE', url, ...handlers)
+        },
+
+        routes
+    }
+}
+
 class Routine {
     routes = []
     middlewares = []
@@ -16,9 +56,10 @@ class Routine {
         enableBodyParsing: true,
         asyncErrorHandler: function (error, ...restargs) {
             console.error(
-                clc.red.underline(`ERROR -->`),
-                clc.yellow(error),
+                clc.red.underline(`ERROR CAUGHT-->`),
+                clc.yellow(error.toString().split(':')[1]),
             )
+            restargs[restargs.length - 1].end()
         },
     }
 
@@ -57,6 +98,15 @@ class Routine {
                 url: null,
                 handler: args[0],
             })
+        else if (typeof args[1] === 'object')
+            for (let obj of args[1].routes) {
+                this.routes.push({
+                    url: `${args[0]}${obj.url}`,
+                    method: obj.method,
+                    handler: obj.handler,
+                    middlewares: obj.middlewares
+                })
+            }
         else
             this.middlewares.push({
                 url: args[0],
@@ -172,7 +222,7 @@ class Routine {
                         route,
                         req,
                         res,
-                        this.conf.asyncErrorHandler
+                        emitter,
                     )
                     //This else block means if request is of type GET where body
                     //should not be present or should not be parsed
@@ -181,7 +231,7 @@ class Routine {
                         route,
                         req,
                         res,
-                        this.conf.asyncErrorHandler
+                        emitter
                     )
                 }
             } else {
@@ -204,13 +254,17 @@ class Routine {
             })
         }
         emitter.on('request-cancelled', (e) => {
-            console.log('emitter')
-            process.on('uncaughtException', (error) => {
-                console.log('process')
-            })
+            console.log(
+                clc.blue.underline(`INFO -->`),
+                clc.yellow(`Request at ${clc.yellow.underline(e.path)} was cancelled`),
+                clc.blue.underline(`\nREASON -->`),
+                clc.yellow(e.message)
+            )
         })
         return server
     }
 }
 
 module.exports = Routine
+exports = module.exports
+exports.Router = Router

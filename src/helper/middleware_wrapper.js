@@ -14,13 +14,15 @@ module.exports = function middlewareWrapper(
         resolve('middleware done')
     }
 
-    function cancel(handler = null, optionalMessage = 'Request Cancelled') {
+    function cancel(optionalMessage = 'Cancel function called', handler = null) {
         if (handler) {
             handler(req)
         }
-        rejectOuter(optionalMessage)
+        emitter.emit('request-cancelled', {
+            path: req.path,
+            message: optionalMessage
+        })
         res.end()
-        emitter.emit('request-cancelled', optionalMessage)
     }
 
     mid(req, res, next, cancel)

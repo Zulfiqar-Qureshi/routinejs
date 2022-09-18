@@ -4,7 +4,7 @@ module.exports = async function executeRouteHandlers(
     route,
     req,
     res,
-    asyncErrorHandler
+    emitter,
 ) {
     /*
      * Lots of things are happening here, so let's break them down one by one
@@ -16,31 +16,23 @@ module.exports = async function executeRouteHandlers(
      *   - middlewareWrapper and next both work on the resolve function of the two
      *   - promises, cleverly, we get a middleware execution pattern
      * */
-    try {
-        await new Promise(async (resolve, reject) => {
-            for (let mid of route.middlewares) {
-                try {
-                    await new Promise((resolveInner, rejectInner) => {
-                        middlewareWrapper(
-                            mid,
-                            req,
-                            res,
-                            resolveInner,
-                            rejectInner,
-                            reject
-                        )
-                    })
-                } catch (e) {
-                    asyncErrorHandler(e)
-                }
-            }
-            resolve('done')
-            //Here we are running the main last handler of
-            //the matched route
-
-            route.handler(req, res)
-        })
-    } catch (e) {
-        asyncErrorHandler(e)
-    }
+    await new Promise(async (resolve, reject) => {
+        for (let mid of route.middlewares) {
+            await new Promise((resolveInner, rejectInner) => {
+                middlewareWrapper(
+                    mid,
+                    req,
+                    res,
+                    resolveInner,
+                    rejectInner,
+                    reject,
+                    emitter
+                )
+            })
+        }
+        resolve('done')
+    })
+    //Here we are running the main last handler of
+    //the matched route
+    route.handler(req, res)
 }
