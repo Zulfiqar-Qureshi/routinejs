@@ -6,6 +6,7 @@ const bodyParser = require('./helper/body_parser')
 const clc = require('cli-color')
 const {EventEmitter} = require('node:events')
 const emitter = new EventEmitter();
+const ascii = require('./ascii.json')
 
 function Router() {
     let routes = []
@@ -151,7 +152,8 @@ class Routine {
      * @param PORT {number} Port to start listening on, default is 8080
      * @param handler {function} callback function to call once server is successfully started
      */
-    listen(PORT = 8080, handler = null) {
+    listen(PORT = 8080, handler = (port) => console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)) {
+        console.log(clc.green(ascii.art[3]))
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
@@ -244,9 +246,7 @@ class Routine {
         //Callback handler for our custom listen function so that user could log
         //something or run something once this router server is started on provided
         //port
-        if (handler != null) {
-            handler()
-        }
+        handler(PORT)
 
         if (conf.catchUnhandledErrors) {
             process.on('uncaughtException', function (err) {
