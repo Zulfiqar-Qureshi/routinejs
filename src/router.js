@@ -1,5 +1,6 @@
 const http = require('http')
 const url = require('url')
+const {match} = require('path-to-regexp')
 const executeRouteHandlers = require('./helper/route_handler')
 const executeMiddlewareHandler = require('./helper/middleware_handler')
 const bodyParser = require('./helper/body_parser')
@@ -7,6 +8,19 @@ const clc = require('cli-color')
 const {EventEmitter} = require('node:events')
 const emitter = new EventEmitter();
 const ascii = require('./ascii.json')
+
+//Function to parse routes like '/:name1/:name2' to '/xyz/abc'
+//aka dynamic routing system
+function findMatchingRoute(req, routes) {
+    return routes.find((obj) => {
+        let fn = match(obj.url, {decode: decodeURIComponent})
+        let tokens = fn(req.path)
+        if (tokens !== false && obj.method === req.method) {
+            req.params = tokens.params
+        }
+        return !!tokens
+    })
+}
 
 function Router() {
     let routes = []
@@ -193,10 +207,14 @@ class Routine {
                     ? parsedUrl.pathname
                     : parsedUrl.pathname.replace(/(\/)+$/g, '')
 
+            // console.log(isRouteMatch(req, this.routes))
+            // console.log(req.params)
             //Checking to see that the incoming requests matches any route in our code
-            let route = this.routes.find((obj) => {
-                return obj.url === req.path && obj.method === req.method
-            })
+            // let route = this.routes.find((obj) => {
+            //     return obj.url === req.path && obj.method === req.method
+            // })
+
+            let route = findMatchingRoute(req, this.routes)
 
             //If match is found (means the above route var is not undefined),
             //then we proceed with the request, otherwise we sent a 404 Not found

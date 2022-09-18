@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "cli-color": "^2.0.3"
+    "cli-color": "^2.0.3",
+    "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
     "prettier": "^2.7.1"
