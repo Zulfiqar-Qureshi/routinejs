@@ -1,3 +1,9 @@
+//ts-check
+/**
+ * @file router.js is the root file for this framework
+ * @author Zulfiqar Ali Qureshi
+ * @see <a href="https://author.juniordev.net">My Resume</a>
+ */
 const http = require('http')
 const url = require('url')
 const {match} = require('path-to-regexp')
@@ -10,8 +16,12 @@ const emitter = new EventEmitter();
 const ascii = require('./ascii.json')
 const packageJson = require('../package.json')
 
-//Function to parse routes like '/:name1/:name2' to '/xyz/abc'
-//aka dynamic routing system
+/**
+ * Function to find a matching route from the array of routes within the framework
+ * @param {Object} req - Request Object
+ * @param {Array<Object>} routes - Routes array to be searched in
+ * @returns {Object | Undefined} - Returns possible route object if matched, otherwise undefined
+ * */
 function findMatchingRoute(req, routes) {
     return routes.find((obj) => {
         let fn = match(obj.url, {decode: decodeURIComponent})
@@ -23,12 +33,33 @@ function findMatchingRoute(req, routes) {
     })
 }
 
+/**
+ * A main route object
+ * @typedef {Object} Route
+ * @property {string} url - path of the route, such as '/xyz' or '/xyz/abc'
+ * @property {'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'} method - Http method of the route
+ * @property {Function} handler - main handler function for the route
+ * @property {Function | Undefined} middlewares - any possible middleware functions given prior to handler func
+ * */
+
+
 function Router() {
+    /**
+     * @param {Array<Route>} routes - routes array where individual route objects are pushed upon code traversal
+     * */
     let routes = []
     //Method to push route data into the routes array,
     //since the behaviour is only different in case of methodString
     //i.e. GET, POST etc. we abstracted this push behaviour into a
     //separate method, hence called routePush
+    /**
+     * Method to push route data into the routes array
+     * @param {'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'} methodString - http method for the route
+     * @param {string} url - Path of the route
+     * @param {Array<Function>} handlers - Array of handler functions, from which the last one is
+     * main route handler while other functions before it are treated as middleware functions
+     * @returns {void}
+     * */
     function routePush(methodString, url, ...handlers) {
         routes.push({
             url,
@@ -63,6 +94,9 @@ function Router() {
     }
 }
 
+/**
+ * Entry point to our framework, everything starts by creating an object of this class
+ * */
 class Routine {
     routes = []
     middlewares = []

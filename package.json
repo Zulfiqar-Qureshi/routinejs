@@ -4,6 +4,8 @@
     "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
+    "clean-jsdoc-theme": "^4.1.8",
+    "jsdoc": "^3.6.11",
     "prettier": "^2.7.1"
   },
   "name": "routinejs",
@@ -11,7 +13,8 @@
   "description": "A dead simple nodejs routine, that's it!",
   "main": "src/router.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "jsdoc -c config/jsdoc.json"
   },
   "repository": {
     "type": "git",
