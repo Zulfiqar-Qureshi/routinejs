@@ -311,6 +311,9 @@ class Routine {
             process.on('uncaughtException', function (err) {
                 conf.asyncErrorHandler(err, requestRef, responseRef)
             })
+            process.on('unhandledPromiseRejection', function (err) {
+                conf.asyncErrorHandler(err, requestRef, responseRef)
+            })
         }
         emitter.on('request-cancelled', (e) => {
             console.log(
