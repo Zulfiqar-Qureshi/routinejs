@@ -8,6 +8,7 @@ const clc = require('cli-color')
 const {EventEmitter} = require('node:events')
 const emitter = new EventEmitter();
 const ascii = require('./ascii.json')
+const packageJson = require('../package.json')
 
 //Function to parse routes like '/:name1/:name2' to '/xyz/abc'
 //aka dynamic routing system
@@ -168,6 +169,12 @@ class Routine {
      */
     listen(PORT = 8080, handler = (port) => console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)) {
         console.log(clc.green(ascii.art[3]))
+        console.log(
+            clc.green(`Version: `),
+            clc.yellow(packageJson.version)
+        )
+        console.log(clc.green(`Please consider leave a ⭐ at `), clc.yellow.underline(`https://github.com/Zulfiqar-Qureshi/routine-js`))
+        console.log(clc.green(`documentation can be found at `), clc.yellow.underline(`https://routinejs.juniordev.net\n`))
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
