@@ -102,9 +102,9 @@ class Routine {
     middlewares = []
     conf = {
         allowMultipart: false,
-        catchUnhandledErrors: true,
+        catchErrors: true,
         enableBodyParsing: true,
-        asyncErrorHandler: function (error, ...restargs) {
+        errorHandler: function (error, ...restargs) {
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
                 clc.yellow(error.toString().split(':')[1]),
@@ -120,23 +120,23 @@ class Routine {
         if (conf.enableBodyParsing != undefined && typeof conf.enableBodyParsing === 'boolean') {
             this.conf.enableBodyParsing = conf?.enableBodyParsing
         }
-        if (conf.catchUnhandledErrors != undefined && typeof conf.catchUnhandledErrors === 'boolean') {
+        if (conf.catchErrors != undefined && typeof conf.catchErrors === 'boolean') {
             this.conf.catchUnhandledErrors = conf?.catchUnhandledErrors
         }
         if (
-            conf.asyncErrorHandler &&
-            typeof conf.asyncErrorHandler === 'function'
+            conf.errorHandler &&
+            typeof conf.errorHandler === 'function'
         ) {
-            this.conf.asyncErrorHandler = conf?.asyncErrorHandler
+            this.conf.errorHandler = conf?.errorHandler
         } else if (
-            conf.asyncErrorHandler &&
-            typeof conf.asyncErrorHandler !== 'function'
+            conf.errorHandler &&
+            typeof conf.errorHandler !== 'function'
         ) {
             console.error(
                 clc.red.underline(`ERROR -->`),
                 clc.greenBright.underline(`function`),
                 clc.yellow(`expected as error handler got`),
-                clc.red.underline(`${typeof conf.asyncErrorHandler}`)
+                clc.red.underline(`${typeof conf.errorHandler}`)
             )
             process.exit(-1)
         }
@@ -307,12 +307,12 @@ class Routine {
         //port
         handler(PORT)
 
-        if (conf.catchUnhandledErrors) {
+        if (conf.catchErrors) {
             process.on('uncaughtException', function (err) {
-                conf.asyncErrorHandler(err, requestRef, responseRef)
+                conf.errorHandler(err, requestRef, responseRef)
             })
             process.on('unhandledPromiseRejection', function (err) {
-                conf.asyncErrorHandler(err, requestRef, responseRef)
+                conf.errorHandler(err, requestRef, responseRef)
             })
         }
         emitter.on('request-cancelled', (e) => {
