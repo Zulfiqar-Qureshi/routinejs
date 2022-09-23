@@ -1,7 +1,8 @@
 {
   "source": {
     "include": [
-      "src"
+      "src",
+      "examples"
     ],
     "includePattern": ".js$",
     "excludePattern": "(node_modules/|docs)"
@@ -15,7 +16,7 @@
   },
   "opts": {
     "recurse": true,
-    "destination": "./docs/",
+    "destination": "./docs/internal",
     "template": "./node_modules/clean-jsdoc-theme",
     "theme_opts": {
       "default_theme": "dark",

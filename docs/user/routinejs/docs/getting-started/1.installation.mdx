@@ -1,0 +1,44 @@
+---
+title: Installation
+description: Routinejs installation procedure
+slug: installation
+---
+
+`RoutineJS` installation is pretty straight forward and just like any other nodejs library/framework
+
+Run the following commands to install `RoutineJS`
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+```mdx-code-block
+<Tabs
+    defaultValue="npm"
+    values={[
+        {label: 'Npm', value: 'npm'},
+        {label: 'Yarn', value: 'yarn'},
+    ]}>
+<TabItem value="npm">
+```
+
+```shell
+npm install routinejs
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="yarn">
+```
+```shell
+yarn add routinejs
+```
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+Simple as that, now you should be able to use `require` it in your project like so
+
+```js
+const Routine = require('routinejs')
+```
