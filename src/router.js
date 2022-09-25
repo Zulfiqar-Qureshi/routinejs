@@ -105,9 +105,16 @@ class Routine {
         catchErrors: true,
         enableBodyParsing: true,
         errorHandler: function (error, ...restargs) {
+            const caller_line = error.stack.split("\n")[4];
+            const index = caller_line.indexOf("at ");
+            const clean = caller_line.slice(index + 2, caller_line.length);
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
                 clc.yellow(error.toString().split(':')[1]),
+            )
+            console.error(
+                clc.red.underline(`LINE -->`),
+                clc.yellow(clean.replace('Object.handler', '')),
             )
             restargs[restargs.length - 1].end()
         },
@@ -212,13 +219,13 @@ class Routine {
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
+            res.setHeader('X-Powered-By', 'routinejs')
             requestRef = req
             responseRef = res
             //Custom method allowing easy json transmission as ExpressJS does
             res.json = (json) => {
                 res.setHeader('Content-Type', 'application/json')
                 res.end(JSON.stringify(json))
-                return 0
             }
             res.status = (statusCode = 200) => {
                 res.statusCode = statusCode
