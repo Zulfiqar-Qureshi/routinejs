@@ -3,3 +3,53 @@ title: Basic usage
 description: How to require and use routine in your project
 slug: basic-usage
 ---
+
+:::info
+`Routine` is very similar to `Express` in it’s workings,
+there are some hidden features in `Routine` which we’ll talk about later
+that makes this a compelling alternative to `Express`.
+:::
+
+To get started, we first have to `require` routine and initialize an object from `Routine` class
+
+```jsx
+const Routine = require("routine-js")
+
+//getting an instance of Routine class with all the superpowers
+//highlight-next-line
+const app = new Routine()
+```
+
+
+To start listening for requests, we need to utilize `listen` method in the `Routine instance` which in this condition, is `app` variable.
+
+```jsx
+const Routine = require("routine-js")
+const app = new Routine()
+
+//This is enough viable code to start listening for incoming requests
+//highlight-next-line
+app.listen()
+```
+
+`.listen` method has two parameters and have good defaults for both of them.
+
+`.listen(port = 8080, callback = (port) => log(port))`
+
+After calling `app.listen` , you can run your `js` file and you should see this
+```shell
+/$$$$$$$                        /$$     /$$                        /$$$$$  /$$$$$$
+| $$__  $$                      | $$    |__/                       |__  $$ /$$__  $$
+| $$  \ $$  /$$$$$$  /$$   /$$ /$$$$$$   /$$ /$$$$$$$   /$$$$$$       | $$| $$  \__/
+| $$$$$$$/ /$$__  $$| $$  | $$|_  $$_/  | $$| $$__  $$ /$$__  $$      | $$|  $$$$$$
+| $$__  $$| $$  \ $$| $$  | $$  | $$    | $$| $$  \ $$| $$$$$$$$ /$$  | $$ \____  $$
+| $$  \ $$| $$  | $$| $$  | $$  | $$ /$$| $$| $$  | $$| $$_____/| $$  | $$ /$$  \ $$
+| $$  | $$|  $$$$$$/|  $$$$$$/  |  $$$$/| $$| $$  | $$|  $$$$$$$|  $$$$$$/|  $$$$$$/
+|__/  |__/ \______/  \______/    \___/  |__/|__/  |__/ \_______/ \______/  \______/
+
+Version:  1.0.0
+Please consider leave a ⭐ at  https://github.com/Zulfiqar-Qureshi/routine-js
+documentation can be found at  https://routinejs.juniordev.net
+
+ROUTINE SERVER STARTED ON PORT: 8080
+```

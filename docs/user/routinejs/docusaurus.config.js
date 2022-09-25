@@ -1,7 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
+const lightCodeTheme = require('prism-react-renderer/themes/okaidia');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
@@ -56,6 +56,9 @@ const config = {
     themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
+            colorMode: {
+                defaultMode: 'dark'
+            },
             navbar: {
                 title: 'RoutineJS',
                 // logo: {
@@ -67,7 +70,7 @@ const config = {
                         type: 'doc',
                         docId: 'intro',
                         position: 'left',
-                        label: 'Tutorial',
+                        label: 'Docs',
                     },
                     {to: '/blog', label: 'Blog', position: 'left'},
                     {
