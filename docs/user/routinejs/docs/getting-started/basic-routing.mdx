@@ -3,3 +3,49 @@ title: Basic routing
 description: single file routing
 slug: basic-routing
 ---
+
+Routing is very simple in `Routine` just like it is in `Express` , but without the extra bloat
+
+There are 5 `http` verb methods available to be used
+
+`get` , `post` , `put` , `patch` & `delete`
+
+All of the above accept same amount parameters,
+
+1. A path string such as `/xyz`
+2. Comma separated handlers such as
+
+    ```jsx
+    app.get(`/xyz`, (req, res) => {
+        //route functionality
+    })
+    ```
+
+    The last route function is called `main route handler` and any number of functions before it are called `middlewares`
+
+    :::info
+
+    The concept of `middlewares` in `Routine` is same as it is in `Express` , But it has some extra functionality present in them
+
+    If you are not familiar with this concept, don’t worry, we’ll understand the workings of `middleware` later in the docs
+
+    For now, let’s just focus on simple routing
+
+    :::
+
+Inside the `handler` you have the full power of `Nodejs` available to you with some `extra` methods, such as `.json` and `.status`
+
+```jsx
+app.get(`/xyz`, (req, res) => {
+    //This will send a response to client and end the response cycle
+    res.status(200).json({
+        hello: 'world?',
+    })
+    //This is same as above code, but shorter
+    //res.json({
+    //  "hello": "world?"
+    //})
+})
+```
+
+And the above code will work with all other `http` verbs mentioned at the start 😀
