@@ -1,0 +1,52 @@
+---
+title: Nodejs cluster module usage
+description: how to use cluster module with routinejs
+slug: clustering
+---
+
+### What is clustering?!
+
+When building a production application, you are usually on the lookout for ways to optimize its performance while keeping any possible trade-offs in mind. we'll take a look at an approach that can give you a quick win when it comes to improving the way your Node.js apps handle the workload.
+
+An instance of Node.js runs in a single thread which means that on a multi-core system (which most computers are these days), not all cores will be utilized by the app. To take advantage of the other available cores, you can launch a cluster of Node.js processes and distribute the load between them.
+
+Having multiple threads to handle requests improves the throughput (requests/second) of your server as several clients can be served concurrently. We'll see how to create child processes with the Node.js
+cluster module and then later, we'll take a look at how to manage clustering with the PM2 Process Manager.
+
+`Routine` is fully compatible with `Nodejs cluster module`
+
+Below is a minimal viable example to work with in `cluster module`
+
+```js
+const Routine = require('routinejs')
+const cluster = require("cluster");
+const totalCPUs = require("os").cpus().length;
+
+if (cluster.isMaster) {
+    console.log(`Number of CPUs is ${totalCPUs}`);
+    console.log(`Master ${process.pid} is running`);
+
+    // Fork workers.
+    for (let i = 0; i < totalCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on("exit", (worker, code, signal) => {
+        console.log(`worker ${worker.process.pid} died`);
+        console.log("Let's fork another worker!");
+        cluster.fork();
+    });
+} else {
+    const app = new Routine({
+        enableBodyParsing: true,
+        catchErrors: true,
+    })
+
+    app.get('/user',
+        (req, res) => {
+            res.json("worked :D")
+        })
+
+    app.listen(8080)
+}
+```

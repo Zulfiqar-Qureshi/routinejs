@@ -1,29 +1,33 @@
+---
+title: Socket.io usage
+description: how to use socket.io with routinejs
+slug: socket.io
+---
+
+Below is a simple example of how to get started with [socket.io](https://socket.io) within `Routine`
+
+```jsx
 const Routine = require('routinejs')
 const {Server} = require("socket.io");
-const cors = require('cors')
+
 const app = new Routine({
     enableBodyParsing: true,
     catchErrors: true,
-    errorHandler: (error, req, res) => {
-        res.json({
-            message: error.stack
-        })
-    }
 })
 
-app.use(cors())
-const morgan = require('morgan')
-
-app.use(morgan('[LOG 🌈] :method :url :status :res[content-length] - :response-time ms'))
-
-
+//app.listen returns the server instance
 const server = app.listen(8080)
-let io = new Server(server, {
+
+//using that server instance to create a socket server
+var io = new Server(server, {
     cors: {
+				//adding cors for the online socket io testing tool
         origin: "https://amritb.github.io",
         methods: ["GET", "POST"]
     }
 })
+
+//performing socket io connection and events
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('hello', (data) => {
@@ -32,4 +36,4 @@ io.on('connection', (socket) => {
         io.emit('chat', data)
     })
 });
-
+```

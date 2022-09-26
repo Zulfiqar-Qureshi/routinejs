@@ -1,0 +1,56 @@
+---
+title: cancel function caveats
+description: how to not use cancel function
+slug: cancel-function
+---
+
+`catchErrors` boolean and `errorHandler` function work Alright in most cases
+but there are edge cases as well which can cause the application to freeze or crash
+One of those cases is this, we have a simple `GET` route to `/some_path` and it has a middleware,
+which for some reason cancels the request by calling `cancel` function.
+
+:::caution
+The `cancel` function after running your callback and other necessary things, calls the `res.end` function
+to properly end the response cycle, however, `res.end` in itself is a response from server, after which we
+should not and cannot send another response back to the client.
+One more important thing to note here is that `cancel` DOES NOT halt code execution, it merely ends the request,
+So any code or logic set after calling `cancel` would still run.
+:::
+
+When we call `next` function after calling `cancel`, it moves the execution forward to the next handler, which
+in this case is trying to send a response back to the user, and would fail, now if `catchErrors` value is true,
+the framework would detect this and pass this error to the `errorHandler` function, which in turns tries to send a
+response back to the client, which would crash the server even though the framework is claiming to catch all errors.
+
+```js
+const Routine = require('routinejs')
+
+const app = new Routine({
+    enableBodyParsing: true,
+    catchErrors: true,
+
+    /**
+     * To fix this, either remove `res.json` from below function or do not call `next` after calling `cancel`
+     * in the middleware
+     * */
+    errorHandler: (error, req, res) => {
+        res.json({
+            message: error.stack
+        })
+    }
+})
+
+
+function middleware(req, res, next, cancel) {
+    cancel("Cancelled because of something", (req) => console.log('request cancelled'))
+    next()
+}
+
+app.get('/some_path', middleware, (req, res) => {
+    res.json({
+        message: req.params.name
+    })
+})
+
+app.listen(8080)
+```

@@ -1,5 +1,16 @@
+---
+title: Express validator usage
+description: how to use express validator middleware with routinejs
+slug: express-validator
+---
+
+Express validator middleware is used to validate user input in a `request`
+
+`Routine` is also fully compatible with this middleware
+example
+
+```jsx
 const Routine = require('routinejs')
-const cors = require('cors')
 const {body, validationResult} = require('express-validator');
 const app = new Routine({
     enableBodyParsing: true,
@@ -10,15 +21,6 @@ const app = new Routine({
         })
     }
 })
-const route = require('./router')
-
-app.use(cors())
-const morgan = require('morgan')
-
-app.use(morgan('[LOG 🌈] :method :url :status :res[content-length] - :response-time ms'))
-
-app.use('/testing', route)
-
 
 app.post('/user',
     body('username').isEmail(),
@@ -29,4 +31,4 @@ app.post('/user',
             return res.status(400).json({errors: errors.array()});
         }
     })
-app.listen(8080)
+```
