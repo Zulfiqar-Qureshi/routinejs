@@ -105,16 +105,9 @@ class Routine {
         catchErrors: true,
         enableBodyParsing: true,
         errorHandler: function (error, ...restargs) {
-            const caller_line = error.stack.split("\n")[4];
-            const index = caller_line.indexOf("at ");
-            const clean = caller_line.slice(index + 2, caller_line.length);
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
                 clc.yellow(error.toString().split(':')[1]),
-            )
-            console.error(
-                clc.red.underline(`LINE -->`),
-                clc.yellow(clean.replace('Object.handler', '')),
             )
             restargs[restargs.length - 1].end()
         },
