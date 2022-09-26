@@ -15,15 +15,12 @@ const {body, validationResult} = require('express-validator');
 const app = new Routine({
     enableBodyParsing: true,
     catchErrors: true,
-    errorHandler: (error, req, res) => {
-        res.json({
-            message: error.stack
-        })
-    }
 })
 
 app.post('/user',
+    //highlight-next-line
     body('username').isEmail(),
+    //highlight-next-line
     body('password').isLength({min: 5}),
     (req, res) => {
         const errors = validationResult(req);
@@ -31,4 +28,6 @@ app.post('/user',
             return res.status(400).json({errors: errors.array()});
         }
     })
+
+app.listen() //:8080
 ```

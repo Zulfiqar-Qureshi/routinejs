@@ -21,7 +21,7 @@ const server = app.listen(8080)
 //using that server instance to create a socket server
 var io = new Server(server, {
     cors: {
-				//adding cors for the online socket io testing tool
+        //adding cors for the online socket io testing tool
         origin: "https://amritb.github.io",
         methods: ["GET", "POST"]
     }

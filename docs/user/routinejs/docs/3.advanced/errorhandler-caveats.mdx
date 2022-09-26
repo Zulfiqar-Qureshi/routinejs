@@ -1,5 +1,5 @@
 ---
-title: important! errorHandler function caveats
+title: important! errorHandler caveats
 description: How to not crash your application while using global error checking
 slug: error-handler
 ---
@@ -12,7 +12,7 @@ That sounds good, what’s the catch (pun not intended) ?!
 
 Well, let’s start with some code examples and work our way down from there
 
-:::tip
+:::tip success
 This would work fine
 :::
 ```jsx
@@ -35,7 +35,7 @@ const server = app.listen(8080)
 
 Well, since the error being thrown inside `/user` route controller is `synchronous` in nature, it’s handling would be transferred to it’s `try catch` block, and if that block is not present, then handling would be transferred to the `errorHandler` function, given that `catchErrors` value is not explicitly set to `false`
 
-:::danger
+:::danger failure
 But something like this would not work
 :::
 ```jsx
@@ -47,8 +47,8 @@ const app = new Routine({
 app.get('/user',
     (req, res) => {
         try {
-						//async error
-						Promise.reject("promise rejected")
+            //async error
+            Promise.reject("promise rejected")
         } catch (e) {
             console.log('catch')
         }
@@ -65,7 +65,7 @@ While designing the library, we had to take some assumptions into account, one o
 
 If for some reason you do **not** want the `errorHandler` to take control of a specific `async` error, you have to chain a `.catch` method directly to the `Promise`
 
-:::tip
+:::tip success
 This example will work fine
 :::
 ```jsx
@@ -76,7 +76,7 @@ const app = new Routine({
 
 app.get('/user',
     (req, res) => {
-				Promise.reject("promise rejected").catch((err) => res.json("inside catch"))
+        Promise.reject("promise rejected").catch((err) => res.json("inside catch"))
     })
 
 const server = app.listen(8080)
@@ -94,7 +94,7 @@ Let’s deal with `synchronous` errors first…
 
 `errorHandler` will not catch `sync` errors happening inside it’s own body without a proper `try catch` system in place, this is done deliberately to avoid infinite loops of `errorHandler` execution (this happens though when we are talking about `async` errors)
 
-:::danger
+:::danger failure
 For example, this program will crash
 :::
 
@@ -102,30 +102,30 @@ For example, this program will crash
 const Routine = require('routinejs')
 const app = new Routine({
     catchErrors: true,
-		errorHandler: (error, req, res) => {
-				//this will cause the program to crash
-				throw new Error("causing crash here")
-		}
+    errorHandler: (error, req, res) => {
+        //this will cause the program to crash
+        throw new Error("causing crash here")
+    }
 })
 
 app.get('/user',
     (req, res) => {
-				//error so that we can go into errorHandler body above
-				throw new Error("sync error")
+        //error so that we can go into errorHandler body above
+        throw new Error("sync error")
     })
 
 const server = app.listen(8080)
 ```
-:::tip
+:::tip success
 To fix the above program, simply wrap the `errorHandler` body in a `try catch`
 :::
 ```jsx
 errorHandler: (error, req, res) => {
 		try{
-				//now, catch will be called
-				throw new Error("this won't crash now")
+            //now, catch will be called
+            throw new Error("this won't crash now")
 		}catch(e){
-				console.log(e)
+            console.log(e)
 		}
 }
 ```
@@ -134,15 +134,15 @@ errorHandler: (error, req, res) => {
 
 There are scenarios where the program can go in an **infinite code execution loop** because of `async` errors happening inside `errorHandler`
 
-:::danger
+:::danger failure
 This program will go in an infinite loop of `errorHandler`
 :::
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
     catchErrors: true,
-		errorHandler: (error, req, res) => {
-				console.log('error handler called')
+    errorHandler: (error, req, res) => {
+        console.log('error handler called')
         try {
             setTimeout(() => {
                 throw new Error(err)
@@ -150,13 +150,13 @@ const app = new Routine({
         } catch (e) {
             console.log('catch')
         }
-		}
+    }
 })
 
 app.get('/user',
     (req, res) => {
-				//error so that we can go into errorHandler body above
-				throw new Error("sync error")
+        //error so that we can go into errorHandler body above
+        throw new Error("sync error")
     })
 
 const server = app.listen(8080)
@@ -164,22 +164,22 @@ const server = app.listen(8080)
 
 Notice, even though we have a `try catch` in place inside `errorHandler`, the program itself will keep printing `error handler called` message, that is because of the phenomenon we learned earlier in the article, when we have an `async` error in place and `catchErrors` is set to `true` , we need explicit chaining of `.catch` otherwise `try catch` is of no use.
 
-:::tip
+:::tip success
 This program will NOT crash
 :::
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
     catchErrors: true,
-		errorHandler: (error, req, res) => {
-				Promise.reject("inside error handler").catch((e) => res.json(e))
-		}
+    errorHandler: (error, req, res) => {
+        Promise.reject("inside error handler").catch((e) => res.json(e))
+    }
 })
 
 app.get('/user',
     (req, res) => {
-				//error so that we can go into errorHandler body above
-				throw new Error("sync error")
+        //error so that we can go into errorHandler body above
+        throw new Error("sync error")
     })
 
 const server = app.listen(8080)
