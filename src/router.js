@@ -6,13 +6,14 @@
  */
 const http = require('http')
 const url = require('url')
-const {match} = require('path-to-regexp')
+const safeStringify = require('fast-safe-stringify')
+const { match } = require('path-to-regexp')
 const executeRouteHandlers = require('./helper/route_handler')
 const executeMiddlewareHandler = require('./helper/middleware_handler')
 const bodyParser = require('./helper/body_parser')
 const clc = require('cli-color')
-const {EventEmitter} = require('node:events')
-const emitter = new EventEmitter();
+const { EventEmitter } = require('node:events')
+const emitter = new EventEmitter()
 const ascii = require('./ascii.json')
 const packageJson = require('../package.json')
 
@@ -24,7 +25,7 @@ const packageJson = require('../package.json')
  * */
 function findMatchingRoute(req, routes) {
     return routes.find((obj) => {
-        let fn = match(obj.url, {decode: decodeURIComponent})
+        let fn = match(obj.url, { decode: decodeURIComponent })
         let tokens = fn(req.path)
         if (tokens !== false && obj.method === req.method) {
             req.params = tokens.params
@@ -41,7 +42,6 @@ function findMatchingRoute(req, routes) {
  * @property {Function} handler - main handler function for the route
  * @property {Function | Undefined} middlewares - any possible middleware functions given prior to handler func
  * */
-
 
 function Router() {
     /**
@@ -90,7 +90,7 @@ function Router() {
             routePush('DELETE', url, ...handlers)
         },
 
-        routes
+        routes,
     }
 }
 
@@ -107,29 +107,35 @@ class Routine {
         errorHandler: function (error, ...restargs) {
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
-                clc.yellow(error.toString().split(':')[1]),
+                clc.yellow(error.toString().split(':')[1])
             )
             restargs[restargs.length - 1].end()
         },
     }
 
     constructor(conf) {
-        if (conf.allowMultipart != undefined && typeof conf.allowMultipart === 'boolean') {
+        if (
+            conf?.allowMultipart != undefined &&
+            typeof conf.allowMultipart === 'boolean'
+        ) {
             this.conf.allowMultipart = conf?.allowMultipart
         }
-        if (conf.enableBodyParsing != undefined && typeof conf.enableBodyParsing === 'boolean') {
+        if (
+            conf?.enableBodyParsing != undefined &&
+            typeof conf.enableBodyParsing === 'boolean'
+        ) {
             this.conf.enableBodyParsing = conf?.enableBodyParsing
         }
-        if (conf.catchErrors != undefined && typeof conf.catchErrors === 'boolean') {
+        if (
+            conf?.catchErrors != undefined &&
+            typeof conf.catchErrors === 'boolean'
+        ) {
             this.conf.catchUnhandledErrors = conf?.catchUnhandledErrors
         }
-        if (
-            conf.errorHandler &&
-            typeof conf.errorHandler === 'function'
-        ) {
+        if (conf?.errorHandler && typeof conf.errorHandler === 'function') {
             this.conf.errorHandler = conf?.errorHandler
         } else if (
-            conf.errorHandler &&
+            conf?.errorHandler &&
             typeof conf.errorHandler !== 'function'
         ) {
             console.error(
@@ -154,7 +160,7 @@ class Routine {
                     url: `${args[0]}${obj.url}`,
                     method: obj.method,
                     handler: obj.handler,
-                    middlewares: obj.middlewares
+                    middlewares: obj.middlewares,
                 })
             }
         else
@@ -201,14 +207,23 @@ class Routine {
      * @param PORT {number} Port to start listening on, default is 8080
      * @param handler {function} callback function to call once server is successfully started
      */
-    listen(PORT = 8080, handler = (port) => console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)) {
+    listen(
+        PORT = 8080,
+        handler = (port) =>
+            console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)
+    ) {
         console.log(clc.green(ascii.art[3]))
+        console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
         console.log(
-            clc.green(`Version: `),
-            clc.yellow(packageJson.version)
+            clc.green(`Please consider leave a ⭐ at `),
+            clc.yellow.underline(
+                `https://github.com/Zulfiqar-Qureshi/routine-js`
+            )
         )
-        console.log(clc.green(`Please consider leave a ⭐ at `), clc.yellow.underline(`https://github.com/Zulfiqar-Qureshi/routine-js`))
-        console.log(clc.green(`documentation can be found at `), clc.yellow.underline(`https://routinejs.juniordev.net\n`))
+        console.log(
+            clc.green(`documentation can be found at `),
+            clc.yellow.underline(`https://routinejs.juniordev.net\n`)
+        )
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
@@ -218,7 +233,7 @@ class Routine {
             //Custom method allowing easy json transmission as ExpressJS does
             res.json = (json) => {
                 res.setHeader('Content-Type', 'application/json')
-                res.end(JSON.stringify(json))
+                res.end(safeStringify(json))
             }
             res.status = (statusCode = 200) => {
                 res.statusCode = statusCode
@@ -266,7 +281,7 @@ class Routine {
                 if (['PUT', 'PATCH', 'POST'].indexOf(req.method) !== -1) {
                     if (
                         req.headers['content-type'].split(';')[0] ===
-                        'multipart/form-data' &&
+                            'multipart/form-data' &&
                         !this.conf.allowMultipart
                     ) {
                         res.status(500).json({
@@ -279,21 +294,11 @@ class Routine {
                         req.body = await bodyParser(req)
                     }
 
-                    await executeRouteHandlers(
-                        route,
-                        req,
-                        res,
-                        emitter,
-                    )
+                    await executeRouteHandlers(route, req, res, emitter)
                     //This else block means if request is of type GET where body
                     //should not be present or should not be parsed
                 } else {
-                    await executeRouteHandlers(
-                        route,
-                        req,
-                        res,
-                        emitter
-                    )
+                    await executeRouteHandlers(route, req, res, emitter)
                 }
             } else {
                 res.json(404, {
@@ -318,7 +323,9 @@ class Routine {
         emitter.on('request-cancelled', (e) => {
             console.log(
                 clc.blue.underline(`INFO -->`),
-                clc.yellow(`Request at ${clc.yellow.underline(e.path)} was cancelled`),
+                clc.yellow(
+                    `Request at ${clc.yellow.underline(e.path)} was cancelled`
+                ),
                 clc.blue.underline(`\nREASON -->`),
                 clc.yellow(e.message)
             )
