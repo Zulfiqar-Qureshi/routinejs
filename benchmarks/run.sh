@@ -36,4 +36,6 @@ kill $CURRENT_PID
 
 
 open http://0.0.0.0:1234/
-python3 -m http.server --directory results 1234
+python3 -m http.server --directory results 1234 &
+sleep 2
+kill $!
