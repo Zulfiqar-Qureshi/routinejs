@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+!/usr/bin/env bash
 
 rm "./results/results.json"
 touch "./results/results.json"
@@ -35,3 +35,5 @@ node "./scripts/HapiBenchmark.js"
 kill $CURRENT_PID
 
 
+open http://0.0.0.0:1234/
+python3 -m http.server --directory results 1234
