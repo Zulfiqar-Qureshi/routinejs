@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 
 rm "./results/results.json"
 touch "./results/results.json"
