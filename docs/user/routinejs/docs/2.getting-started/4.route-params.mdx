@@ -1,0 +1,71 @@
+---
+title: Route parameters
+description: route parameters
+slug: route-params
+---
+:::danger Important
+- `RegExp` special characters can only be used in a parameter
+    - `Express.js 4.x` supported `RegExp` special characters regardless of position - this is considered a bug
+- Parameters have suffixes that augment meaning - ``, `+` and `?`. E.g. `/:user*`
+- No wildcard asterisk (``) - use parameters instead (`(.*)` or `:splat*`)
+
+Not all routes from `Express.js 4.x` are compatible with `Routine` , simply because there are some corner cases in express which are
+
+considered as `bugs` by the community and sometimes does not follow regex rules
+
+`Routine` however does not have any special path syntax other than `named params` and it supports any valid `regex`
+
+:::
+
+### Simple usage
+
+Consider the following snippet
+
+```jsx
+app.get(`/:name`, (req,res)=> {})
+```
+
+We are registering a route which kind of an odd string as the `url` , simply put, while registering routes, anything put after the `:` is considered a `named param` which means they have some kind of meaning
+
+and `Routine` should extract it’s value which request route match is found.
+
+So, if i try to visit `[localhost:8080/zulfiqar](http://localhost:8080/zulfiqar)` the `req.params` object will contain a key named `name` and value as `zulfiqar`
+
+### Advancing
+
+```jsx
+app.get(`/:name/:lastname/:contactnumber`, (req,res)=> {})
+
+//will match something like
+/zulfiqar/ali/7079787907 <-- not my real contact tho
+```
+
+The above behavior can be combined with more `named params` and `req.params` will contain those values if match is found
+
+### More advance
+
+Any valid `Regex` can be used instead of passing a string in route registration phase
+
+For example, this is a valid `GET` path
+
+```jsx
+This route path will match butterfly and dragonfly, but not butterflyman, dragonflyman, and so on.
+
+app.get(/.*fly$/, (req, res) => {
+  res.send('/.*fly$/')
+})
+```
+
+### Wildcard
+
+A wildcard route `(.*)` should be registered as a fallback for when no route match is found by `Routine`
+
+```jsx
+This route will match anything
+
+app.get(`(.*)`, (req, res) => {
+  res.send('/.*fly$/')
+})
+```
+
+Note that this route should be registered at the very last, putting it at first or in-between might result in some lost routes.

@@ -12,7 +12,7 @@ const config = {
     baseUrl: '/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
-    favicon: 'img/favicon.ico',
+    // favicon: 'img/favicon.ico',
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
@@ -72,7 +72,7 @@ const config = {
                         position: 'left',
                         label: 'Docs',
                     },
-                    {to: '/blog', label: 'Blog', position: 'left'},
+                    // {to: '/blog', label: 'Blog', position: 'left'},
                     {
                         href: 'https://github.com/Zulfiqar-Qureshi/routine-js',
                         label: 'GitHub',
@@ -97,16 +97,16 @@ const config = {
                         items: [
                             {
                                 label: 'Stack Overflow',
-                                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                                href: 'https://stackoverflow.com/questions/tagged/routinejs',
                             },
-                            {
-                                label: 'Discord',
-                                href: 'https://discordapp.com/invite/docusaurus',
-                            },
-                            {
-                                label: 'Twitter',
-                                href: 'https://twitter.com/docusaurus',
-                            },
+                            // {
+                            //     label: 'Discord',
+                            //     href: 'https://discordapp.com/invite/docusaurus',
+                            // },
+                            // {
+                            //     label: 'Twitter',
+                            //     href: 'https://twitter.com/docusaurus',
+                            // },
                         ],
                     },
                     {
@@ -114,7 +114,7 @@ const config = {
                         items: [
                             {
                                 label: 'Blog',
-                                to: '/blog',
+                                to: 'https://juniordev.net',
                             },
                             {
                                 label: 'GitHub',
