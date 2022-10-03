@@ -10,7 +10,7 @@
     "prettier": "^2.7.1"
   },
   "name": "@juniordev/routinejs",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A dead simple nodejs routine, that's it!",
   "main": "src/router.js",
   "scripts": {
