@@ -9,7 +9,7 @@
     "jsdoc": "^3.6.11",
     "prettier": "^2.7.1"
   },
-  "name": "routinejs",
+  "name": "@juniordev/routinejs",
   "version": "1.0.0",
   "description": "A dead simple nodejs routine, that's it!",
   "main": "src/router.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zulfiqar-Qureshi/routine-js.git"
+    "url": "git+https://github.com/Zulfiqar-Qureshi/routinejs.git"
   },
   "keywords": [
     "node-router",
@@ -31,7 +31,7 @@
   "author": "Zulfiqar Qureshi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Zulfiqar-Qureshi/routine-js/issues"
+    "url": "https://github.com/Zulfiqar-Qureshi/routinejs/issues"
   },
-  "homepage": "https://github.com/Zulfiqar-Qureshi/routine-js#readme"
+  "homepage": "https://github.com/Zulfiqar-Qureshi/routinejs#readme"
 }
