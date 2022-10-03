@@ -98,8 +98,20 @@ function Router() {
  * Entry point to our framework, everything starts by creating an object of this class
  * */
 class Routine {
+
+    /**
+     * @private array
+     * */
     routes = []
+
+    /**
+     * @private array
+     * */
     middlewares = []
+
+    /**
+     * @private object
+     * */
     conf = {
         allowMultipart: false,
         catchErrors: true,
@@ -113,6 +125,10 @@ class Routine {
         },
     }
 
+    /**
+     * @constructor
+     * @param boolean allowMultipart
+     * */
     constructor(conf) {
         if (
             conf?.allowMultipart != undefined &&
@@ -174,6 +190,9 @@ class Routine {
     //since the behaviour is only different in case of methodString
     //i.e. GET, POST etc. we abstracted this push behaviour into a
     //separate method, hence called routePush
+    /**
+     * @private method
+     * */
     routePush(methodString, url, ...handlers) {
         this.routes.push({
             url,
