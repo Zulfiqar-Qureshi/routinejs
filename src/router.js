@@ -34,6 +34,28 @@ function findMatchingRoute(req, routes) {
     })
 }
 
+function use(...args){
+    if (args.length === 1)
+        this.middlewares.push({
+            url: null,
+            handler: args[0],
+        })
+    else if (typeof args[1] === 'object')
+        for (let obj of args[1].routes) {
+            this.routes.push({
+                url: `${args[0]}${obj.url}`,
+                method: obj.method,
+                handler: obj.handler,
+                middlewares: obj.middlewares,
+            })
+        }
+    else
+        this.middlewares.push({
+            url: args[0],
+            handler: args[1],
+        })
+}
+
 /**
  * A main route object
  * @typedef {Object} Route
@@ -48,6 +70,8 @@ function Router() {
      * @param {Array<Route>} routes - routes array where individual route objects are pushed upon code traversal
      * */
     let routes = []
+
+    let middlewares = []
     //Method to push route data into the routes array,
     //since the behaviour is only different in case of methodString
     //i.e. GET, POST etc. we abstracted this push behaviour into a
@@ -89,7 +113,8 @@ function Router() {
         delete: (url, ...handlers) => {
             routePush('DELETE', url, ...handlers)
         },
-
+        use,
+        middlewares,
         routes,
     }
 }
@@ -164,27 +189,7 @@ class Routine {
         }
     }
 
-    use(...args) {
-        if (args.length === 1)
-            this.middlewares.push({
-                url: null,
-                handler: args[0],
-            })
-        else if (typeof args[1] === 'object')
-            for (let obj of args[1].routes) {
-                this.routes.push({
-                    url: `${args[0]}${obj.url}`,
-                    method: obj.method,
-                    handler: obj.handler,
-                    middlewares: obj.middlewares,
-                })
-            }
-        else
-            this.middlewares.push({
-                url: args[0],
-                handler: args[1],
-            })
-    }
+    use = use
 
     //Method to push route data into the routes array,
     //since the behaviour is only different in case of methodString
@@ -234,7 +239,7 @@ class Routine {
         console.log(clc.green(ascii.art[3]))
         console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
         console.log(
-            clc.green(`Please consider leave a ⭐ at `),
+            clc.green(`Please consider leaving a ⭐ at `),
             clc.yellow.underline(
                 `https://github.com/Zulfiqar-Qureshi/routine-js`
             )
