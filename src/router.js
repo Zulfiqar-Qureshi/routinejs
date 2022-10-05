@@ -287,13 +287,6 @@ class Routine {
                     ? parsedUrl.pathname
                     : parsedUrl.pathname.replace(/(\/)+$/g, '')
 
-            // console.log(isRouteMatch(req, this.routes))
-            // console.log(req.params)
-            //Checking to see that the incoming requests matches any route in our code
-            // let route = this.routes.find((obj) => {
-            //     return obj.url === req.path && obj.method === req.method
-            // })
-
             let route = findMatchingRoute(req, this.routes)
 
             //If match is found (means the above route var is not undefined),

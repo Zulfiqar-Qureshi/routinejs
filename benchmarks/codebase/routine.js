@@ -1,4 +1,4 @@
-const Routine = require("routinejs");
+const Routine = require("@juniordev/routinejs");
 const app = new Routine();
 
 
