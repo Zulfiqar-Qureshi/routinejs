@@ -1,18 +1,18 @@
 {
   "dependencies": {
-    "@types/node": "^18.8.2",
     "cli-color": "^2.0.3",
     "fast-safe-stringify": "^2.1.1",
-    "path-to-regexp": "^6.2.1",
-    "typescript": "^4.8.4"
+    "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.1.8",
     "jsdoc": "^3.6.11",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "@types/node": "^18.8.2",
+    "typescript": "^4.8.4"
   },
   "name": "@juniordev/routinejs",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "A dead simple nodejs routine, that's it!",
   "main": "src/router.js",
   "scripts": {
