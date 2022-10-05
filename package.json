@@ -5,18 +5,20 @@
     "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
+    "@types/node": "^18.8.2",
+    "axios": "^1.0.0",
     "clean-jsdoc-theme": "^4.1.8",
+    "jest": "^29.1.2",
     "jsdoc": "^3.6.11",
     "prettier": "^2.7.1",
-    "@types/node": "^18.8.2",
     "typescript": "^4.8.4"
   },
   "name": "@juniordev/routinejs",
-  "version": "1.1.4",
-  "description": "A dead simple nodejs routine, that's it!",
+  "version": "1.1.5",
+  "description": "Express inspired, Blazingly Fast Nodejs router",
   "main": "src/router.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose ./tests --forceExit",
     "doc": "jsdoc -c config/jsdoc.json"
   },
   "repository": {
