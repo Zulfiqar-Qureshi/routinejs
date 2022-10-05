@@ -27,10 +27,13 @@ declare module "@juniordev/routinejs"{
 
     type NextFunction = (data?: any) => void;
     type CancelFunction = (optionalCancellationMessage?: string, optionalCallback?: Function) => void;
+    class Router extends Omit(Routine, ['listen']) {}
 
     export default Routine
-    export {Request, Response, NextFunction, CancelFunction}
+    export {Router, Request, Response, NextFunction, CancelFunction}
 }
+
+const Omit = <T, K extends keyof T>(Class: new () => T, keys: K[]): new () => Omit<T, typeof keys[number]> => Class;
 
 interface config {
     allowMultipart?: boolean
