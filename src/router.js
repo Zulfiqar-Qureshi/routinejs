@@ -141,6 +141,7 @@ class Routine {
         allowMultipart: false,
         catchErrors: true,
         enableBodyParsing: true,
+        suppressInitialLog: false,
         errorHandler: function (error, ...restargs) {
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
@@ -155,6 +156,12 @@ class Routine {
      * @param boolean allowMultipart
      * */
     constructor(conf) {
+        if (
+            conf?.suppressInitialLog != undefined &&
+            typeof conf.suppressInitialLog === 'boolean'
+        ) {
+            this.conf.suppressInitialLog = conf?.suppressInitialLog
+        }
         if (
             conf?.allowMultipart != undefined &&
             typeof conf.allowMultipart === 'boolean'
@@ -236,18 +243,9 @@ class Routine {
         handler = (port) =>
             console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)
     ) {
-        console.log(clc.green(ascii.art[3]))
-        console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
-        console.log(
-            clc.green(`Please consider leaving a ⭐ at `),
-            clc.yellow.underline(
-                `https://github.com/Zulfiqar-Qureshi/routine-js`
-            )
-        )
-        console.log(
-            clc.green(`documentation can be found at `),
-            clc.yellow.underline(`https://routinejs.juniordev.net\n`)
-        )
+        if(!this.conf.suppressInitialLog) {
+            initialLog()
+        }
         let conf = this.conf
         let requestRef, responseRef
         let server = http.createServer(async (req, res) => {
@@ -349,6 +347,21 @@ class Routine {
         })
         return server
     }
+}
+
+function initialLog(){
+    console.log(clc.green(ascii.art[3]))
+    console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
+    console.log(
+        clc.green(`Please consider leaving a ⭐ at `),
+        clc.yellow.underline(
+            `https://github.com/Zulfiqar-Qureshi/routine-js`
+        )
+    )
+    console.log(
+        clc.green(`documentation can be found at `),
+        clc.yellow.underline(`https://routinejs.juniordev.net\n`)
+    )
 }
 
 module.exports = Routine

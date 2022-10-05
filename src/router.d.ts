@@ -40,6 +40,7 @@ interface config {
     errorHandler?: Function
     catchErrors?: boolean
     enableBodyParsing?: boolean
+    suppressInitialLog?: boolean
 }
 type FunctionWithPort = (port: number) => void;
 type Listen = (port?: number, cb?: FunctionWithPort) => void;
