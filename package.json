@@ -14,7 +14,7 @@
     "typescript": "^4.8.4"
   },
   "name": "@juniordev/routinejs",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Express inspired, Blazingly Fast Nodejs router",
   "main": "src/router.js",
   "scripts": {
