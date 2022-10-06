@@ -8,7 +8,10 @@ module.exports = function middlewareWrapper(
     emitter
 ) {
     function next(optionalData = null) {
-        if (optionalData != null) {
+        if (optionalData != null && optionalData instanceof Error) {
+            res.status(500).end()
+            reject("Error passed to next function")
+        } else if (optionalData != null) {
             req.nextData = optionalData
         }
         resolve('middleware done')
