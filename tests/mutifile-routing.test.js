@@ -20,7 +20,7 @@ app.use(`/use`, router)
 
 app.listen(PORT)
 
-test("post request body parsing", async () => {
+test("multifile-routing test", async () => {
     expect(
         (await axios.get(`${URL}/use/inside-router/inside-router2`)).data
     ).toBe("done")

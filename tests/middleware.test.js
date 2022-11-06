@@ -23,7 +23,7 @@ app.get(`/middleware-test`,middleware, (req, res) => {
 
 app.listen(PORT)
 
-test("middleware function working", async () => {
+test("middleware test", async () => {
     expect(
         (await axios.get(`${URL}/middleware-test`)).data
     ).toBe("done")
