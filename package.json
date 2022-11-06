@@ -2,6 +2,7 @@
   "dependencies": {
     "cli-color": "^2.0.3",
     "fast-safe-stringify": "^2.1.1",
+    "find-my-way": "^7.3.1",
     "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
