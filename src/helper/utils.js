@@ -24,22 +24,6 @@ function use(...args){
             handler: args[1],
         })
 }
-/**
- * Function to find a matching route from the array of routes within the framework
- * @param {Object} req - Request Object
- * @param {Array<Object>} routes - Routes array to be searched in
- * @returns {Object | Undefined} - Returns possible route object if matched, otherwise undefined
- * */
-function findMatchingRoute(req, routes) {
-    return routes.find((obj) => {
-        let fn = match(obj.url, { decode: decodeURIComponent })
-        let tokens = fn(req.path)
-        if (tokens !== false && obj.method === req.method) {
-            req.params = tokens.params
-        }
-        return !!tokens
-    })
-}
 
 function initialLog(){
     console.log(clc.green(ascii.art[3]))
@@ -56,6 +40,60 @@ function initialLog(){
     )
 }
 
+function Router() {
+    /**
+     * @param {Array<Route>} routes - routes array where individual route objects are pushed upon code traversal
+     * */
+    let routes = []
+
+    let middlewares = []
+    //Method to push route data into the routes array,
+    //since the behaviour is only different in case of methodString
+    //i.e. GET, POST etc. we abstracted this push behaviour into a
+    //separate method, hence called routePush
+    /**
+     * Method to push route data into the routes array
+     * @param {'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'} methodString - http method for the route
+     * @param {string} url - Path of the route
+     * @param {Array<Function>} handlers - Array of handler functions, from which the last one is
+     * main route handler while other functions before it are treated as middleware functions
+     * @returns {void}
+     * */
+    function routePush(methodString, url, ...handlers) {
+        routes.push({
+            url,
+            method: methodString,
+            handler: handlers.pop(),
+            middlewares: handlers,
+        })
+    }
+
+    return {
+        get: (url, ...handlers) => {
+            routePush('GET', url, ...handlers)
+        },
+
+        post: (url, ...handlers) => {
+            routePush('POST', url, ...handlers)
+        },
+
+        put: (url, ...handlers) => {
+            routePush('PUT', url, ...handlers)
+        },
+
+        patch: (url, ...handlers) => {
+            routePush('PATCH', url, ...handlers)
+        },
+
+        delete: (url, ...handlers) => {
+            routePush('DELETE', url, ...handlers)
+        },
+        use,
+        middlewares,
+        routes,
+    }
+}
+
 exports.use = use
-exports.findMatchingRoute = findMatchingRoute
 exports.initialLog = initialLog
+exports.Router = Router

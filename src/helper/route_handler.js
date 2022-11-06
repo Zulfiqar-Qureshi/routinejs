@@ -17,7 +17,7 @@ module.exports = async function executeRouteHandlers(
      *   - promises, cleverly, we get a middleware execution pattern
      * */
     await new Promise(async (resolve, reject) => {
-        for (let mid of route.middlewares) {
+        for (let mid of route.store.middlewares) {
             await new Promise((resolveInner, rejectInner) => {
                 middlewareWrapper(
                     mid,
@@ -32,6 +32,7 @@ module.exports = async function executeRouteHandlers(
         }
         resolve('done')
     })
+    req.params = route.params
     //Here we are running the main last handler of
     //the matched route
     route.handler(req, res)
