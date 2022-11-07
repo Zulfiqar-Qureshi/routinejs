@@ -1,4 +1,3 @@
-const {match} = require("path-to-regexp");
 const clc = require("cli-color");
 const ascii = require("../ascii.json");
 const packageJson = require("../../package.json");
