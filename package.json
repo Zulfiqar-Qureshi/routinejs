@@ -2,8 +2,7 @@
   "dependencies": {
     "cli-color": "^2.0.3",
     "fast-safe-stringify": "^2.1.1",
-    "find-my-way": "^7.3.1",
-    "path-to-regexp": "^6.2.1"
+    "find-my-way": "^7.3.1"
   },
   "devDependencies": {
     "@types/node": "^18.8.2",
@@ -15,7 +14,7 @@
     "typescript": "^4.8.4"
   },
   "name": "@juniordev/routinejs",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Express inspired, Radix trie based super fast Nodejs router",
   "main": "src/router.js",
   "scripts": {
