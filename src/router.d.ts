@@ -15,6 +15,7 @@ declare module "@juniordev/routinejs"{
     class Response extends ServerResponse {
         json(jsonObject: JSON | string | unknown)
         status: (num: number) => Response;
+        sendStatus(status: string | unknown)
     }
 
     interface Request extends RequestListener{
