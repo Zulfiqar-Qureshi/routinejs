@@ -40,6 +40,7 @@ class Routine {
         catchErrors: true,
         enableBodyParsing: true,
         suppressInitialLog: false,
+        enableCookieParsing: true,
         errorHandler: function (error, req, res) {
             console.error(
                 clc.red.underline(`ERROR CAUGHT-->`),
@@ -51,7 +52,7 @@ class Routine {
 
     /**
      * @constructor
-     * @param boolean allowMultipart
+     * @param conf
      * */
     constructor(conf) {
         if (
@@ -71,6 +72,12 @@ class Routine {
             typeof conf.enableBodyParsing === 'boolean'
         ) {
             this.conf.enableBodyParsing = conf?.enableBodyParsing
+        }
+        if (
+            conf?.enableCookieParsing != undefined &&
+            typeof conf.enableCookieParsing === 'boolean'
+        ) {
+            this.conf.enableCookieParsing = conf?.enableCookieParsing
         }
         if (
             conf?.catchErrors != undefined &&

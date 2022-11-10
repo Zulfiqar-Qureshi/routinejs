@@ -4,6 +4,7 @@ const packageJson = require("../../package.json");
 const http = require("http");
 const safeStringify = require("fast-safe-stringify");
 const url = require("url");
+const cookie = require('cookie')
 const executeMiddlewareHandler = require("./middleware_handler");
 const bodyParser = require("./body_parser");
 const executeRouteHandlers = require("./route_handler");
@@ -129,7 +130,12 @@ function listen(
             res.statusCode = statusCode
             res.end()
         }
-
+        res.setCookie = (name, value, options) => {
+            setCookie(name, value, options, res)
+        }
+        if(conf?.enableCookieParsing){
+            req.cookies = cookie.parse(req.headers.cookie || '')
+        }
         //Parsing request url and the 'true' is for allowing the parser to also parse
         // any query strings if present
         let parsedUrl = url.parse(req.url, true)
@@ -209,17 +215,17 @@ function listen(
             conf.errorHandler(err, requestRef, responseRef)
         })
     }
-    emitter.on('request-cancelled', (e) => {
-        console.log(
-            clc.blue.underline(`INFO -->`),
-            clc.yellow(
-                `Request at ${clc.yellow.underline(e.path)} was cancelled`
-            ),
-            clc.blue.underline(`\nREASON -->`),
-            clc.yellow(e.message)
-        )
-    })
     return server
+}
+
+function setCookie(name, value, options = null, res){
+    let cookies
+    if(typeof options === 'object'){
+        cookies = cookie.serialize(name, String(value), options)
+    } else {
+        cookies = cookie.serialize(name, String(value))
+    }
+    res.setHeader('Set-Cookie', cookies)
 }
 
 exports.use = use

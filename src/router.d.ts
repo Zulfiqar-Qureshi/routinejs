@@ -1,5 +1,6 @@
 declare module "@juniordev/routinejs"{
     import {RequestListener, ServerResponse} from "http";
+    import {CookieSerializeOptions} from 'cookie'
 
     export class Routine {
         constructor(props?: config)
@@ -16,6 +17,7 @@ declare module "@juniordev/routinejs"{
         json(jsonObject: JSON | string | unknown)
         status: (num: number) => Response;
         sendStatus(status: string | unknown)
+        setCookie(name: String, value: any, options?: CookieSerializeOptions)
     }
 
     interface Request extends RequestListener{
@@ -24,11 +26,12 @@ declare module "@juniordev/routinejs"{
         nextData: QueryOrParam | any
         body: QueryOrParam | any
         path: string
+        cookies?: object
         [key: string]: unknown
     }
 
     type NextFunction = (data?: any) => void;
-    type CancelFunction = (optionalCancellationMessage?: string, optionalCallback?: Function) => void;
+    type CancelFunction = () => void;
     class Router extends Omit(Routine, ['listen']) {}
 
     export default Routine
@@ -43,6 +46,7 @@ interface config {
     catchErrors?: boolean
     enableBodyParsing?: boolean
     suppressInitialLog?: boolean
+    enableCookieParsing?: boolean
 }
 type FunctionWithPort = (port: number) => void;
 type Listen = (port?: number, cb?: FunctionWithPort) => void;

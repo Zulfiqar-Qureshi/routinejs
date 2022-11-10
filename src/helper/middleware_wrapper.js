@@ -17,21 +17,8 @@ module.exports = function middlewareWrapper(
         resolve('middleware done')
     }
 
-    function cancel(...args) {
-        let optionalMessage = "Cancel function called"
-        if (typeof args[0] === "function") {
-            args[0](req)
-        } else if (typeof args[0] === "string" && typeof args[1] === "function"){
-            optionalMessage = args[0]
-            args[1](req)
-        } else if (typeof args[0] === "string") {
-            optionalMessage = args[0]
-        }
-        emitter.emit('request-cancelled', {
-            path: req.path,
-            message: optionalMessage
-        })
-        res.end()
+    function cancel() {
+        res.destroy()
     }
 
     mid(req, res, next, cancel)
