@@ -26,8 +26,8 @@ declare module "@juniordev/routinejs"{
         nextData: QueryOrParam | any
         body: QueryOrParam | any
         path: string
-        cookies?: object
-        [key: string]: unknown
+        cookies?: object | any
+        [key: string]: any
     }
 
     type NextFunction = (data?: any) => void;
