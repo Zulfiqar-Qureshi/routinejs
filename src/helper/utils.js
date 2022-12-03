@@ -12,14 +12,23 @@ const {EventEmitter} = require("node:events");
 const emitter = new EventEmitter()
 const trieRouter = require('./trie')
 
-function use(...args){
-    if (args.length === 1)
+function use(...args) {
+    if (args.length === 1) {
         this.middlewares.push({
             url: null,
             handler: args[0],
         })
-    else if (typeof args[1] === 'object')
-        for (let obj of args[1].routes) {
+    }
+    else if (typeof args[args.length - 1] === 'object') {
+        for (let mid of args) {
+            if (typeof mid === 'function') {
+                this.middlewares.push({
+                    url: null,
+                    handler: mid
+                })
+            }
+        }
+        for (let obj of args[args.length - 1].routes) {
             this.routes.push({
                 url: `${args[0]}${obj.url}`,
                 method: obj.method,
@@ -27,14 +36,14 @@ function use(...args){
                 middlewares: obj.middlewares,
             })
         }
-    else
+    } else
         this.middlewares.push({
-            url: args[0],
+            url: args[0] === '/' ? '' : args[0],
             handler: args[1],
         })
 }
 
-function initialLog(){
+function initialLog() {
     console.log(clc.green(ascii.art[3]))
     console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
     console.log(
@@ -133,7 +142,7 @@ function listen(
         res.setCookie = (name, value, options) => {
             setCookie(name, value, options, res)
         }
-        if(conf?.enableCookieParsing){
+        if (conf?.enableCookieParsing) {
             req.cookies = cookie.parse(req.headers.cookie || '')
         }
         //Parsing request url and the 'true' is for allowing the parser to also parse
@@ -218,9 +227,9 @@ function listen(
     return server
 }
 
-function setCookie(name, value, options = null, res){
+function setCookie(name, value, options = null, res) {
     let cookies
-    if(typeof options === 'object'){
+    if (typeof options === 'object') {
         cookies = cookie.serialize(name, String(value), options)
     } else {
         cookies = cookie.serialize(name, String(value))
