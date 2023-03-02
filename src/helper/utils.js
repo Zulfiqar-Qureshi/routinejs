@@ -82,7 +82,7 @@ function Router() {
             url,
             method: methodString,
             handler: handlers.pop(),
-            middlewares: handlers,
+            middlewares: [...middlewares.map(obj => obj.handler), ...handlers],
         })
     }
 

@@ -7,6 +7,14 @@
 const clc = require('cli-color')
 const {use, Router, listen} = require('./helper/utils')
 const trieRouter = require('./helper/trie')
+const http = require("http");
+const safeStringify = require("fast-safe-stringify");
+const cookie = require("cookie");
+const url = require("url");
+const executeMiddlewareHandler = require("./helper/middleware_handler");
+const bodyParser = require("./helper/body_parser");
+const executeRouteHandlers = require("./helper/route_handler");
+const {EventEmitter} = require("node:events");
 
 /**
  * A main route object
@@ -83,7 +91,7 @@ class Routine {
             conf?.catchErrors != undefined &&
             typeof conf.catchErrors === 'boolean'
         ) {
-            this.conf.catchUnhandledErrors = conf?.catchUnhandledErrors
+            this.conf.catchErrors = conf?.catchErrors
         }
         if (conf?.errorHandler && typeof conf.errorHandler === 'function') {
             this.conf.errorHandler = conf?.errorHandler

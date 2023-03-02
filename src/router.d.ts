@@ -14,7 +14,7 @@ declare module "@juniordev/routinejs"{
     }
 
     class Response extends ServerResponse {
-        json(jsonObject: JSON | string | unknown)
+        json(json: JSON | string | unknown)
         status: (num: number) => Response;
         sendStatus(status: string | unknown)
         setCookie(name: String, value: any, options?: CookieSerializeOptions)
