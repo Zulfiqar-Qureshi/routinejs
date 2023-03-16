@@ -16,7 +16,7 @@
         "typescript": "^4.8.4"
     },
     "name": "@juniordev/routinejs",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "description": "Express inspired, Radix trie based super fast Nodejs router",
     "main": "src/router.js",
     "scripts": {
