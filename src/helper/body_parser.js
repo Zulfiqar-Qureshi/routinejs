@@ -22,5 +22,5 @@ module.exports = async function bodyParser(req) {
             reject(err)
         })
     })
-    return JSON.parse(buffer)
+    return buffer !== '' ? JSON.parse(buffer) : JSON.parse('{}')
 }
