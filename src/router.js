@@ -4,17 +4,8 @@
  * @author Zulfiqar Ali Qureshi
  * @see <a href="https://author.juniordev.net">My Resume</a>
  */
-const clc = require('cli-color')
-const {use, Router, listen} = require('./helper/utils')
+const { use, Router, listen } = require('./helper/utils')
 const trieRouter = require('./helper/trie')
-const http = require("http");
-const safeStringify = require("fast-safe-stringify");
-const cookie = require("cookie");
-const url = require("url");
-const executeMiddlewareHandler = require("./helper/middleware_handler");
-const bodyParser = require("./helper/body_parser");
-const executeRouteHandlers = require("./helper/route_handler");
-const {EventEmitter} = require("node:events");
 
 /**
  * A main route object
@@ -29,7 +20,6 @@ const {EventEmitter} = require("node:events");
  * Entry point to our framework, everything starts by creating an object of this class
  * */
 class Routine {
-
     /**
      * @private array
      * */
@@ -44,18 +34,9 @@ class Routine {
      * @private object
      * */
     conf = {
-        allowMultipart: false,
-        catchErrors: true,
         enableBodyParsing: true,
         suppressInitialLog: false,
         enableCookieParsing: true,
-        errorHandler: function (error, req, res) {
-            console.error(
-                clc.red.underline(`ERROR CAUGHT-->`),
-                clc.yellow(error.toString().split(':')[1])
-            )
-            res.end()
-        },
     }
 
     /**
@@ -70,12 +51,6 @@ class Routine {
             this.conf.suppressInitialLog = conf?.suppressInitialLog
         }
         if (
-            conf?.allowMultipart != undefined &&
-            typeof conf.allowMultipart === 'boolean'
-        ) {
-            this.conf.allowMultipart = conf?.allowMultipart
-        }
-        if (
             conf?.enableBodyParsing != undefined &&
             typeof conf.enableBodyParsing === 'boolean'
         ) {
@@ -86,26 +61,6 @@ class Routine {
             typeof conf.enableCookieParsing === 'boolean'
         ) {
             this.conf.enableCookieParsing = conf?.enableCookieParsing
-        }
-        if (
-            conf?.catchErrors != undefined &&
-            typeof conf.catchErrors === 'boolean'
-        ) {
-            this.conf.catchErrors = conf?.catchErrors
-        }
-        if (conf?.errorHandler && typeof conf.errorHandler === 'function') {
-            this.conf.errorHandler = conf?.errorHandler
-        } else if (
-            conf?.errorHandler &&
-            typeof conf.errorHandler !== 'function'
-        ) {
-            console.error(
-                clc.red.underline(`ERROR -->`),
-                clc.greenBright.underline(`function`),
-                clc.yellow(`expected as error handler got`),
-                clc.red.underline(`${typeof conf.errorHandler}`)
-            )
-            process.exit(-1)
         }
     }
 
@@ -147,14 +102,23 @@ class Routine {
         this.routePush('DELETE', url, ...handlers)
     }
 
+    options(url, ...handlers) {
+        this.routePush('OPTIONS', url, ...handlers)
+    }
+
     /**
      * @private method
      * */
     registerRoutes() {
-        this.routes.forEach(obj => {
-            trieRouter.on(obj.method, obj.url, (req, res) => {
-                obj.handler(req, res)
-            }, obj)
+        this.routes.forEach((obj) => {
+            trieRouter.on(
+                obj.method,
+                obj.url,
+                (req, res) => {
+                    obj.handler(req, res)
+                },
+                obj
+            )
         })
     }
 

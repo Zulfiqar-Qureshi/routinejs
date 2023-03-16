@@ -1,14 +1,14 @@
-const clc = require("cli-color");
-const ascii = require("../ascii.json");
-const packageJson = require("../../package.json");
-const http = require("http");
-const safeStringify = require("fast-safe-stringify");
-const url = require("url");
+const clc = require('cli-color')
+const ascii = require('../ascii.json')
+const packageJson = require('../../package.json')
+const http = require('http')
+const safeStringify = require('fast-safe-stringify')
+const url = require('url')
 const cookie = require('cookie')
-const executeMiddlewareHandler = require("./middleware_handler");
-const bodyParser = require("./body_parser");
-const executeRouteHandlers = require("./route_handler");
-const {EventEmitter} = require("node:events");
+const executeMiddlewareHandler = require('./middleware_handler')
+const bodyParser = require('./body_parser')
+const executeRouteHandlers = require('./route_handler')
+const { EventEmitter } = require('node:events')
 const emitter = new EventEmitter()
 const trieRouter = require('./trie')
 
@@ -18,13 +18,12 @@ function use(...args) {
             url: null,
             handler: args[0],
         })
-    }
-    else if (typeof args[args.length - 1] === 'object') {
+    } else if (typeof args[args.length - 1] === 'object') {
         for (let mid of args) {
             if (typeof mid === 'function') {
                 this.middlewares.push({
                     url: null,
-                    handler: mid
+                    handler: mid,
                 })
             }
         }
@@ -48,9 +47,7 @@ function initialLog() {
     console.log(clc.green(`Version: `), clc.yellow(packageJson.version))
     console.log(
         clc.green(`Please consider leaving a ⭐ at `),
-        clc.yellow.underline(
-            `https://github.com/Zulfiqar-Qureshi/routine-js`
-        )
+        clc.yellow.underline(`https://github.com/Zulfiqar-Qureshi/routine-js`)
     )
     console.log(
         clc.green(`documentation can be found at `),
@@ -71,7 +68,7 @@ function Router() {
     //separate method, hence called routePush
     /**
      * Method to push route data into the routes array
-     * @param {'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'} methodString - http method for the route
+     * @param {'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS'} methodString - http method for the route
      * @param {string} url - Path of the route
      * @param {Array<Function>} handlers - Array of handler functions, from which the last one is
      * main route handler while other functions before it are treated as middleware functions
@@ -82,7 +79,10 @@ function Router() {
             url,
             method: methodString,
             handler: handlers.pop(),
-            middlewares: [...middlewares.map(obj => obj.handler), ...handlers],
+            middlewares: [
+                ...middlewares.map((obj) => obj.handler),
+                ...handlers,
+            ],
         })
     }
 
@@ -106,6 +106,10 @@ function Router() {
         delete: (url, ...handlers) => {
             routePush('DELETE', url, ...handlers)
         },
+
+        options: (url, ...handlers) => {
+            routePush('OPTIONS', url, ...handlers)
+        },
         use,
         middlewares,
         routes,
@@ -114,8 +118,7 @@ function Router() {
 
 function listen(
     PORT = 8080,
-    handler = (port) =>
-        console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)
+    handler = (port) => console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)
 ) {
     let requestRef, responseRef
     if (!this.conf.suppressInitialLog) {
@@ -175,30 +178,13 @@ function listen(
         //then we proceed with the request, otherwise we sent a 404 Not found
         //message in the else block
         if (!!route) {
-            //Since these below methods allow a payload inside request body,
-            // we need to parse it and attach it to the req.body object
-            if (['PUT', 'PATCH', 'POST'].indexOf(req.method) !== -1) {
-                if (
-                    req.headers['content-type'].split(';')[0] ===
-                    'multipart/form-data' &&
-                    !this.conf.allowMultipart
-                ) {
-                    res.status(500).json({
-                        message: 'Multipart form-data is not allowed',
-                    })
-                    return
-                }
-
-                if (conf.enableBodyParsing) {
-                    req.body = await bodyParser(req)
-                }
-
-                await executeRouteHandlers(route, req, res, emitter)
-                //This else block means if request is of type GET where body
-                //should not be present or should not be parsed
-            } else {
-                await executeRouteHandlers(route, req, res, emitter)
+            if (conf.enableBodyParsing) {
+                req.body = await bodyParser(req)
             }
+
+            await executeRouteHandlers(route, req, res, emitter)
+            //This else block means if request is of type GET where body
+            //should not be present or should not be parsed
         } else {
             res.json(404, {
                 message: 'Route not found',
@@ -216,14 +202,6 @@ function listen(
     //port
     handler(PORT)
 
-    if (conf.catchErrors) {
-        process.on('uncaughtException', function (err) {
-            conf.errorHandler(err, requestRef, responseRef)
-        })
-        process.on('unhandledPromiseRejection', function (err) {
-            conf.errorHandler(err, requestRef, responseRef)
-        })
-    }
     return server
 }
 
