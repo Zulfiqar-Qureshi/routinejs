@@ -35,20 +35,21 @@ const app = new Routine({
      * */
     errorHandler: (error, req, res) => {
         res.json({
-            message: error.stack
+            message: error.stack,
         })
-    }
+    },
 })
 
-
 function middleware(req, res, next, cancel) {
-    cancel("Cancelled because of something", (req) => console.log('request cancelled'))
+    cancel('Cancelled because of something', (req) =>
+        console.log('request cancelled')
+    )
     next()
 }
 
 app.get('/some_path', middleware, (req, res) => {
     res.json({
-        message: req.params.name
+        message: req.params.name,
     })
 })
 

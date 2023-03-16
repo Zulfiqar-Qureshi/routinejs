@@ -1,7 +1,7 @@
 const Routine = require('../src/router')
 const axios = require('axios')
 const app = new Routine({
-    suppressInitialLog: true
+    suppressInitialLog: true,
 })
 
 const PORT = 1235
@@ -13,10 +13,12 @@ app.post(`/bodyparse`, (req, res) => {
 
 app.listen(PORT)
 
-test("post request body parsing", async () => {
+test('post request body parsing', async () => {
     expect(
-        (await axios.post(`${URL}/bodyparse`, {
-            name: "zulfiqar"
-        })).data
-    ).toBe("zulfiqar")
+        (
+            await axios.post(`${URL}/bodyparse`, {
+                name: 'zulfiqar',
+            })
+        ).data
+    ).toBe('zulfiqar')
 })

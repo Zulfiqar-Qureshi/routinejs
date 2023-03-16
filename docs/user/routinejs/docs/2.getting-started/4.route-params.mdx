@@ -3,11 +3,13 @@ title: Route parameters
 description: route parameters
 slug: route-params
 ---
+
 :::danger Important
-- `RegExp` special characters can only be used in a parameter
-    - `Express.js 4.x` supported `RegExp` special characters regardless of position - this is considered a bug
-- Parameters have suffixes that augment meaning - ``, `+` and `?`. E.g. `/:user*`
-- No wildcard asterisk (``) - use parameters instead (`(.*)` or `:splat*`)
+
+-   `RegExp` special characters can only be used in a parameter
+    -   `Express.js 4.x` supported `RegExp` special characters regardless of position - this is considered a bug
+-   Parameters have suffixes that augment meaning - ``, `+`and`?`. E.g. `/:user\*`
+-   No wildcard asterisk (``) - use parameters instead (`(._)`or`:splat_`)
 
 Not all routes from `Express.js 4.x` are compatible with `Routine` , simply because there are some corner cases in express which are
 
@@ -22,7 +24,7 @@ considered as `bugs` by the community and sometimes does not follow regex rules
 Consider the following snippet
 
 ```jsx
-app.get(`/:name`, (req,res)=> {})
+app.get(`/:name`, (req, res) => {})
 ```
 
 We are registering a route which kind of an odd string as the `url` , simply put, while registering routes, anything put after the `:` is considered a `named param` which means they have some kind of meaning

@@ -1,11 +1,6 @@
 const middlewareWrapper = require('./middleware_wrapper')
 
-module.exports = async function executeRouteHandlers(
-    route,
-    req,
-    res,
-    emitter,
-) {
+module.exports = async function executeRouteHandlers(route, req, res, emitter) {
     /*
      * Lots of things are happening here, so let's break them down one by one
      * Firstly, we are utilizing a promise so that it waits until the inner loop is completed

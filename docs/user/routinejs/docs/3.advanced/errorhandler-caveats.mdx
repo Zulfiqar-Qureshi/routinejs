@@ -15,20 +15,20 @@ Well, let’s start with some code examples and work our way down from there
 :::tip success
 This would work fine
 :::
+
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
-    catchErrors: true
+    catchErrors: true,
 })
 
-app.get('/user',
-    (req, res) => {
-        try {
-            throw new Error("something")
-        } catch (e) {
-            console.log('catch')
-        }
-    })
+app.get('/user', (req, res) => {
+    try {
+        throw new Error('something')
+    } catch (e) {
+        console.log('catch')
+    }
+})
 
 const server = app.listen(8080)
 ```
@@ -38,21 +38,21 @@ Well, since the error being thrown inside `/user` route controller is `synchrono
 :::danger failure
 But something like this would not work
 :::
+
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
-    catchErrors: true
+    catchErrors: true,
 })
 
-app.get('/user',
-    (req, res) => {
-        try {
-            //async error
-            Promise.reject("promise rejected")
-        } catch (e) {
-            console.log('catch')
-        }
-    })
+app.get('/user', (req, res) => {
+    try {
+        //async error
+        Promise.reject('promise rejected')
+    } catch (e) {
+        console.log('catch')
+    }
+})
 
 const server = app.listen(8080)
 ```
@@ -68,16 +68,16 @@ If for some reason you do **not** want the `errorHandler` to take control of a s
 :::tip success
 This example will work fine
 :::
+
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
-    catchErrors: true
+    catchErrors: true,
 })
 
-app.get('/user',
-    (req, res) => {
-        Promise.reject("promise rejected").catch((err) => res.json("inside catch"))
-    })
+app.get('/user', (req, res) => {
+    Promise.reject('promise rejected').catch((err) => res.json('inside catch'))
+})
 
 const server = app.listen(8080)
 ```
@@ -104,29 +104,30 @@ const app = new Routine({
     catchErrors: true,
     errorHandler: (error, req, res) => {
         //this will cause the program to crash
-        throw new Error("causing crash here")
-    }
+        throw new Error('causing crash here')
+    },
 })
 
-app.get('/user',
-    (req, res) => {
-        //error so that we can go into errorHandler body above
-        throw new Error("sync error")
-    })
+app.get('/user', (req, res) => {
+    //error so that we can go into errorHandler body above
+    throw new Error('sync error')
+})
 
 const server = app.listen(8080)
 ```
+
 :::tip success
 To fix the above program, simply wrap the `errorHandler` body in a `try catch`
 :::
+
 ```jsx
 errorHandler: (error, req, res) => {
-		try{
-            //now, catch will be called
-            throw new Error("this won't crash now")
-		}catch(e){
-            console.log(e)
-		}
+    try {
+        //now, catch will be called
+        throw new Error("this won't crash now")
+    } catch (e) {
+        console.log(e)
+    }
 }
 ```
 
@@ -137,6 +138,7 @@ There are scenarios where the program can go in an **infinite code execution loo
 :::danger failure
 This program will go in an infinite loop of `errorHandler`
 :::
+
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
@@ -150,14 +152,13 @@ const app = new Routine({
         } catch (e) {
             console.log('catch')
         }
-    }
+    },
 })
 
-app.get('/user',
-    (req, res) => {
-        //error so that we can go into errorHandler body above
-        throw new Error("sync error")
-    })
+app.get('/user', (req, res) => {
+    //error so that we can go into errorHandler body above
+    throw new Error('sync error')
+})
 
 const server = app.listen(8080)
 ```
@@ -167,20 +168,20 @@ Notice, even though we have a `try catch` in place inside `errorHandler`, the pr
 :::tip success
 This program will NOT crash
 :::
+
 ```jsx
 const Routine = require('routinejs')
 const app = new Routine({
     catchErrors: true,
     errorHandler: (error, req, res) => {
-        Promise.reject("inside error handler").catch((e) => res.json(e))
-    }
+        Promise.reject('inside error handler').catch((e) => res.json(e))
+    },
 })
 
-app.get('/user',
-    (req, res) => {
-        //error so that we can go into errorHandler body above
-        throw new Error("sync error")
-    })
+app.get('/user', (req, res) => {
+    //error so that we can go into errorHandler body above
+    throw new Error('sync error')
+})
 
 const server = app.listen(8080)
 ```

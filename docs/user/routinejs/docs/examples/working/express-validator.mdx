@@ -11,23 +11,25 @@ example
 
 ```jsx
 const Routine = require('routinejs')
-const {body, validationResult} = require('express-validator');
+const { body, validationResult } = require('express-validator')
 const app = new Routine({
     enableBodyParsing: true,
     catchErrors: true,
 })
 
-app.post('/user',
+app.post(
+    '/user',
     //highlight-next-line
     body('username').isEmail(),
     //highlight-next-line
-    body('password').isLength({min: 5}),
+    body('password').isLength({ min: 5 }),
     (req, res) => {
-        const errors = validationResult(req);
+        const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
+            return res.status(400).json({ errors: errors.array() })
         }
-    })
+    }
+)
 
 app.listen() //:8080
 ```

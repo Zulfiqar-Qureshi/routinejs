@@ -1,43 +1,43 @@
 {
-  "dependencies": {
-    "@types/cookie": "^0.5.1",
-    "cli-color": "^2.0.3",
-    "cookie": "^0.5.0",
-    "fast-safe-stringify": "^2.1.1",
-    "find-my-way": "^7.3.1"
-  },
-  "devDependencies": {
-    "@types/node": "^18.8.2",
-    "axios": "^1.0.0",
-    "clean-jsdoc-theme": "^4.1.8",
-    "jest": "^29.1.2",
-    "jsdoc": "^3.6.11",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
-  },
-  "name": "@juniordev/routinejs",
-  "version": "2.2.0",
-  "description": "Express inspired, Radix trie based super fast Nodejs router",
-  "main": "src/router.js",
-  "scripts": {
-    "test": "jest --verbose ./tests --forceExit",
-    "doc": "jsdoc -c config/jsdoc.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Zulfiqar-Qureshi/routinejs.git"
-  },
-  "keywords": [
-    "node-router",
-    "router",
-    "paths",
-    "routes",
-    "javascript-router"
-  ],
-  "author": "Zulfiqar Qureshi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Zulfiqar-Qureshi/routinejs/issues"
-  },
-  "homepage": "https://github.com/Zulfiqar-Qureshi/routinejs#readme"
+    "dependencies": {
+        "@types/cookie": "^0.5.1",
+        "cli-color": "^2.0.3",
+        "cookie": "^0.5.0",
+        "fast-safe-stringify": "^2.1.1",
+        "find-my-way": "^7.3.1"
+    },
+    "devDependencies": {
+        "@types/node": "^18.8.2",
+        "axios": "^1.0.0",
+        "clean-jsdoc-theme": "^4.1.8",
+        "jest": "^29.1.2",
+        "jsdoc": "^3.6.11",
+        "prettier": "^2.7.1",
+        "typescript": "^4.8.4"
+    },
+    "name": "@juniordev/routinejs",
+    "version": "2.3.0",
+    "description": "Express inspired, Radix trie based super fast Nodejs router",
+    "main": "src/router.js",
+    "scripts": {
+        "test": "jest --verbose ./tests --forceExit",
+        "doc": "jsdoc -c config/jsdoc.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Zulfiqar-Qureshi/routinejs.git"
+    },
+    "keywords": [
+        "node-router",
+        "router",
+        "paths",
+        "routes",
+        "javascript-router"
+    ],
+    "author": "Zulfiqar Qureshi",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Zulfiqar-Qureshi/routinejs/issues"
+    },
+    "homepage": "https://github.com/Zulfiqar-Qureshi/routinejs#readme"
 }

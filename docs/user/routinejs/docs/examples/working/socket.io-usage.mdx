@@ -8,7 +8,7 @@ Below is a simple example of how to get started with [socket.io](https://socket.
 
 ```jsx
 const Routine = require('routinejs')
-const {Server} = require("socket.io");
+const { Server } = require('socket.io')
 
 const app = new Routine({
     enableBodyParsing: true,
@@ -22,18 +22,18 @@ const server = app.listen(8080)
 var io = new Server(server, {
     cors: {
         //adding cors for the online socket io testing tool
-        origin: "https://amritb.github.io",
-        methods: ["GET", "POST"]
-    }
+        origin: 'https://amritb.github.io',
+        methods: ['GET', 'POST'],
+    },
 })
 
 //performing socket io connection and events
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('a user connected')
     socket.on('hello', (data) => {
         console.log(data)
         socket.emit('chat', data)
         io.emit('chat', data)
     })
-});
+})
 ```

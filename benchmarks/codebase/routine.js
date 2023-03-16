@@ -1,7 +1,6 @@
-const Routine = require("@juniordev/routinejs");
-const app = new Routine();
+const Routine = require('@juniordev/routinejs')
+const app = new Routine()
 
+app.get(`/`, (req, res) => res.json('hello'))
 
-app.get(`/`, (req,res) => res.json("hello"))
-
-app.listen(3000);
+app.listen(3000)
