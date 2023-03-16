@@ -6,6 +6,7 @@
  */
 const { use, Router, listen } = require('./helper/utils')
 const trieRouter = require('./helper/trie')
+const clc = require('cli-color')
 
 /**
  * A main route object
@@ -37,6 +38,7 @@ class Routine {
         enableBodyParsing: true,
         suppressInitialLog: false,
         enableCookieParsing: true,
+        suppressRouteLog: false
     }
 
     /**
@@ -61,6 +63,12 @@ class Routine {
             typeof conf.enableCookieParsing === 'boolean'
         ) {
             this.conf.enableCookieParsing = conf?.enableCookieParsing
+        }
+        if (
+            conf?.suppressRouteLog != undefined &&
+            typeof conf.suppressRouteLog === 'boolean'
+        ) {
+            this.conf.suppressRouteLog = conf?.suppressRouteLog
         }
     }
 
@@ -110,7 +118,26 @@ class Routine {
      * @private method
      * */
     registerRoutes() {
-        this.routes.forEach((obj) => {
+        if(!this.conf.suppressRouteLog) console.log(clc.yellow(`COMPILING ROUTES:`))
+        this.routes.forEach((obj, idx) => {
+            if(!this.conf.suppressRouteLog) {
+                let color = clc.white.bold
+                switch (obj.method) {
+                    case 'GET':
+                        color = clc.cyan
+                        break
+                    case 'POST':
+                        color = clc.blue
+                        break
+                    case 'PUT':
+                        color = clc.magenta
+                        break
+                    case 'DELETE':
+                        color = clc.red
+                        break
+                }
+                console.log(clc.green(`${idx + 1}`), ` |>`, color.bold(` [${obj.method}]`), ` -->`, color.underline(`${obj.url}`))
+            }
             trieRouter.on(
                 obj.method,
                 obj.url,

@@ -48,6 +48,7 @@ interface config {
     enableBodyParsing?: boolean
     suppressInitialLog?: boolean
     enableCookieParsing?: boolean
+    suppressRouteLog?: boolean
 }
 type FunctionWithPort = (port: number) => void
 type Listen = (port?: number, cb?: FunctionWithPort) => void

@@ -119,9 +119,6 @@ function listen(
     handler = (port) => console.log(`ROUTINE SERVER STARTED ON PORT: ${port}`)
 ) {
     let requestRef, responseRef
-    if (!this.conf.suppressInitialLog) {
-        initialLog()
-    }
     let conf = this.conf
     let server = http.createServer(async (req, res) => {
         res.setHeader('X-Powered-By', 'routinejs')
@@ -193,6 +190,10 @@ function listen(
     //running route registration code after listen method is called,
     //such that we don't register same route twice
     this.registerRoutes()
+
+    if (!this.conf.suppressInitialLog) {
+        initialLog()
+    }
 
     //Callback handler for our custom listen function so that user could log
     //something or run something once this router server is started on provided
