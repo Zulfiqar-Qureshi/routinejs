@@ -4,8 +4,6 @@ module.exports = function middlewareWrapper(
     res,
     resolve,
     reject,
-    rejectOuter,
-    emitter
 ) {
     function next(optionalData = null) {
         if (optionalData != null && optionalData instanceof Error) {

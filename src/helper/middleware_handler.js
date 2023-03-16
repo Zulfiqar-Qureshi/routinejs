@@ -5,9 +5,8 @@ module.exports = async function executeMiddlewareHandler(
     res,
     middlewares,
     parsedUrl,
-    emitter
 ) {
-    await new Promise(async (resolve, reject) => {
+    await new Promise(async resolve => {
         for (let mid of middlewares) {
             if (!mid.url) {
                 await new Promise((resolveInner, rejectInner) => {
@@ -17,8 +16,6 @@ module.exports = async function executeMiddlewareHandler(
                         res,
                         resolveInner,
                         rejectInner,
-                        reject,
-                        emitter
                     )
                 })
             } else {
@@ -40,8 +37,6 @@ module.exports = async function executeMiddlewareHandler(
                             res,
                             resolveInner,
                             rejectInner,
-                            reject,
-                            emitter
                         )
                     })
                 }

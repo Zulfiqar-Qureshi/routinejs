@@ -8,8 +8,6 @@ const cookie = require('cookie')
 const executeMiddlewareHandler = require('./middleware_handler')
 const bodyParser = require('./body_parser')
 const executeRouteHandlers = require('./route_handler')
-const { EventEmitter } = require('node:events')
-const emitter = new EventEmitter()
 const trieRouter = require('./trie')
 
 function use(...args) {
@@ -157,7 +155,6 @@ function listen(
             res,
             this.middlewares,
             parsedUrl,
-            emitter
         )
         //attaching incoming query strings to request.query object
         req.query = parsedUrl.query
@@ -182,7 +179,7 @@ function listen(
                 req.body = await bodyParser(req)
             }
 
-            await executeRouteHandlers(route, req, res, emitter)
+            await executeRouteHandlers(route, req, res)
             //This else block means if request is of type GET where body
             //should not be present or should not be parsed
         } else {
