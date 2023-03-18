@@ -180,7 +180,7 @@ function listen(
             })
         }
     })
-    server.listen(PORT)
+    server.listen(typeof PORT === 'number' ? PORT : parseInt(PORT))
 
     //running route registration code after listen method is called,
     //such that we don't register same route twice

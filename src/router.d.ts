@@ -50,7 +50,7 @@ interface config {
     suppressRouteLog?: boolean
 }
 type FunctionWithPort = (port: number) => void
-type Listen = (port?: number, cb?: FunctionWithPort) => void
+type Listen = (port?: number | string, cb?: FunctionWithPort) => void
 type HttpMethodCall = (url: string, ...handlers: Array<Function>) => void
 interface QueryOrParam {
     [key: string]: unknown
