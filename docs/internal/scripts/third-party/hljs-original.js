@@ -1463,7 +1463,6 @@ var hljs = (function () {
         function compileMode(mode, parent) {
             const cmode = /** @type CompiledMode */ (mode)
             if (mode.isCompiled) return cmode
-
             ;[
                 scopeClassName,
                 // do this early so compiler extensions generally don't have to worry about
@@ -1477,7 +1476,6 @@ var hljs = (function () {
 
             // __beforeBegin is considered private API, internal use only
             mode.__beforeBegin = null
-
             ;[
                 beginKeywords,
                 // do this later so compiler extensions that come earlier have access to the

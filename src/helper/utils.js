@@ -147,12 +147,7 @@ function listen(
         // any query strings if present
         let parsedUrl = url.parse(req.url, true)
 
-        await executeMiddlewareHandler(
-            req,
-            res,
-            this.middlewares,
-            parsedUrl,
-        )
+        await executeMiddlewareHandler(req, res, this.middlewares, parsedUrl)
         //attaching incoming query strings to request.query object
         req.query = parsedUrl.query
 

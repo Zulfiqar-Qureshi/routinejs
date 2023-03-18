@@ -4,19 +4,13 @@ module.exports = async function executeMiddlewareHandler(
     req,
     res,
     middlewares,
-    parsedUrl,
+    parsedUrl
 ) {
-    await new Promise(async resolve => {
+    await new Promise(async (resolve) => {
         for (let mid of middlewares) {
             if (!mid.url) {
-                await new Promise((resolveInner, rejectInner) => {
-                    middlewareWrapper(
-                        mid.handler,
-                        req,
-                        res,
-                        resolveInner,
-                        rejectInner,
-                    )
+                await new Promise((resolveInner) => {
+                    middlewareWrapper(mid.handler, req, res, resolveInner)
                 })
             } else {
                 let path =
@@ -30,14 +24,8 @@ module.exports = async function executeMiddlewareHandler(
                 })
 
                 if (route !== undefined) {
-                    await new Promise((resolveInner, rejectInner) => {
-                        middlewareWrapper(
-                            mid.handler,
-                            req,
-                            res,
-                            resolveInner,
-                            rejectInner,
-                        )
+                    await new Promise((resolveInner) => {
+                        middlewareWrapper(mid.handler, req, res, resolveInner)
                     })
                 }
             }

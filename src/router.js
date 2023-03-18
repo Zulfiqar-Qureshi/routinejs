@@ -38,7 +38,7 @@ class Routine {
         enableBodyParsing: true,
         suppressInitialLog: false,
         enableCookieParsing: true,
-        suppressRouteLog: false
+        suppressRouteLog: false,
     }
 
     /**
@@ -118,9 +118,10 @@ class Routine {
      * @private method
      * */
     registerRoutes() {
-        if(!this.conf.suppressRouteLog) console.log(clc.yellow(`COMPILING ROUTES:`))
+        if (!this.conf.suppressRouteLog)
+            console.log(clc.yellow(`COMPILED ROUTES:`))
         this.routes.forEach((obj, idx) => {
-            if(!this.conf.suppressRouteLog) {
+            if (!this.conf.suppressRouteLog) {
                 let color = clc.white.bold
                 switch (obj.method) {
                     case 'GET':
@@ -136,7 +137,13 @@ class Routine {
                         color = clc.red
                         break
                 }
-                console.log(clc.green(`${idx + 1}`), ` |>`, color.bold(` [${obj.method}]`), ` -->`, color.underline(`${obj.url}`))
+                console.log(
+                    clc.green(`${idx + 1}`),
+                    ` |>`,
+                    color.bold(` [${obj.method}]`),
+                    ` -->`,
+                    color.underline(`${obj.url}`)
+                )
             }
             trieRouter.on(
                 obj.method,

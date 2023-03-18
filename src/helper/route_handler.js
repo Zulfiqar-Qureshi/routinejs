@@ -11,16 +11,10 @@ module.exports = async function executeRouteHandlers(route, req, res) {
      *   - middlewareWrapper and next both work on the resolve function of the two
      *   - promises, cleverly, we get a middleware execution pattern
      * */
-    await new Promise(async resolve => {
+    await new Promise(async (resolve) => {
         for (let mid of route.store.middlewares) {
-            await new Promise((resolveInner, rejectInner) => {
-                middlewareWrapper(
-                    mid,
-                    req,
-                    res,
-                    resolveInner,
-                    rejectInner,
-                )
+            await new Promise((resolveInner) => {
+                middlewareWrapper(mid, req, res, resolveInner)
             })
         }
         resolve('done')
