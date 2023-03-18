@@ -32,11 +32,10 @@ declare module '@juniordev/routinejs' {
     }
 
     type NextFunction = (data?: any) => void
-    type CancelFunction = () => void
     class Router extends Omit(Routine, ['listen']) {}
 
     export default Routine
-    export { Router, Request, Response, NextFunction, CancelFunction }
+    export { Router, Request, Response, NextFunction }
 }
 
 const Omit = <T, K extends keyof T>(
