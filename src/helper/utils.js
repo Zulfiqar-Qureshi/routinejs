@@ -177,7 +177,7 @@ function listen(
         req.path =
             parsedUrl.pathname === '/'
                 ? parsedUrl.pathname
-                : parsedUrl.pathname.replace(/(\/)+$/g, '')
+                : parsedUrl.pathname.replace(/\/[%]?$/g, '')
 
         //Finding a match within radix trie
         let route = trieRouter.find(req.method, req.path)
