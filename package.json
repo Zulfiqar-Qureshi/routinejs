@@ -15,7 +15,7 @@
         "prettier": "^2.7.1",
         "typescript": "^4.8.4"
     },
-    "name": "@juniordev/routinejs",
+    "name": "routinejs",
     "version": "2.3.9",
     "description": "Express inspired, Radix trie based super fast Nodejs router",
     "main": "src/router.js",
