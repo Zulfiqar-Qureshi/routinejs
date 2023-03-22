@@ -141,7 +141,7 @@ class Routine {
                     clc.green(`${idx + 1}`),
                     ` |>`,
                     color.bold(` [${obj.method}]`),
-                    ` -->`,
+                    `|>`,
                     color.underline(`${obj.url}`)
                 )
             }

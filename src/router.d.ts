@@ -18,7 +18,8 @@ declare module '@juniordev/routinejs' {
         json(json: JSON | string | unknown)
         status: (num: number) => Response
         sendStatus(status: string | unknown)
-        setCookie(name: String, value: any, options?: CookieSerializeOptions)
+        setCookie(name: string, value: any, options?: CookieSerializeOptions)
+        send(data: JSON | object | string | Buffer)
     }
 
     interface Request extends RequestListener {

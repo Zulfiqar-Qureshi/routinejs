@@ -140,6 +140,25 @@ function listen(
         res.setCookie = (name, value, options) => {
             setCookie(name, value, options, res)
         }
+
+        res.send = (data) => {
+            if (typeof data === 'object') {
+                res.json(data)
+            } else if (typeof data === 'string') {
+                if (/<[a-z][\s\S]*>/i.test(data)) {
+                    res.setHeader('Content-Type', 'text/html')
+                } else {
+                    res.setHeader('Content-Type', 'text/plain')
+                }
+                res.end(data)
+            } else if (Buffer.isBuffer(data)) {
+                res.setHeader('Content-Type', 'application/octet-stream')
+                res.end(data)
+            } else {
+                res.status(500).end('Internal Server Error')
+            }
+        }
+
         if (conf?.enableCookieParsing) {
             req.cookies = cookie.parse(req.headers.cookie || '')
         }
