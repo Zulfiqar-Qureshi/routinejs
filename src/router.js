@@ -18,7 +18,7 @@ const clc = require('cli-color')
  * */
 
 /**
- * Entry point to our framework, everything starts by creating an object of this class
+ * Entry point to our framework, everything starts by creating an object of this Routine class
  * */
 class Routine {
     /**
